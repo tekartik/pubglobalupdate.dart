@@ -10,13 +10,4 @@ dev_dependencies:
   dev_test: any
   test: any
 executables:
-  scclone:
-  pubfmt:
-  pubanalyzer:
-  rdartanalyzer:
-  rpubclean:
-  dirinfo:
-  dirdeploy:
   pubglobalupdate:
-  prettyprint:
-dependency_overrides:
