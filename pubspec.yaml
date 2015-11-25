@@ -1,0 +1,22 @@
+name: pubglobalupdate
+version: 0.1.0
+description: Helper to update all global activated package
+environment:
+  sdk: '>=1.0.0 <2.0.0'
+dependencies:
+  tekartik_io_tools:
+    git: git://github.com/tekartik/tekartik_io_tools.dart
+dev_dependencies:
+  dev_test: any
+  test: any
+executables:
+  scclone:
+  pubfmt:
+  pubanalyzer:
+  rdartanalyzer:
+  rpubclean:
+  dirinfo:
+  dirdeploy:
+  pubglobalupdate:
+  prettyprint:
+dependency_overrides:
