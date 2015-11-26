@@ -1,13 +1,14 @@
 name: pubglobalupdate
-version: 0.1.0
+version: 0.2.0
 description: Helper to update all global activated package
 author: Tekartik
 homepage: https://github.com/tekartik/pubglobalupdate.dart
 environment:
   sdk: '>=1.0.0 <2.0.0'
 dependencies:
-  tekartik_pub:
-    git: git://github.com/tekartik/tekartik_pub.dart
+  args: any
+  cmdo:
+    git: git://github.com/tekartik/cmdo.dart
 dev_dependencies:
   dev_test: any
   test: any

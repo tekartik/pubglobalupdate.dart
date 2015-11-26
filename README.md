@@ -23,4 +23,4 @@ pubglobalupdate
 
 ### Dependencies
 
-* [tekartik_pub](https://github.com/tekartik/tekartik_pub.dart)
+* [cmdo](https://github.com/tekartik/cmdo.dart)

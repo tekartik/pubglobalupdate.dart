@@ -84,9 +84,8 @@ main() {
     test('hosted', () async {
       String packageName = 'stagehand';
 
-      CommandResult result = await io.runCmd(
-          pubCmd(['global', 'activate', '--overwrite', packageName])
-            ..connectIo = true);
+      CommandResult result = await io
+          .runCmd(pubCmd(['global', 'activate', '--overwrite', packageName]));
 
       _findActivatedPackage() {
         GlobalHostedPackage foundPackage;
