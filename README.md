@@ -2,6 +2,8 @@
 
 Command (Linux/Mac/Windows) to update all current global activated package their latest version
 
+[![Build Status](https://travis-ci.org/tekartik/pubglobalupdate.dart.svg)](https://travis-ci.org/tekartik/pubglobalupdate.dart)
+
 ## Activate
 
 ````
