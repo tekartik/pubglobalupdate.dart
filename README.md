@@ -20,3 +20,7 @@ pubglobalupdate
 
 * before commit, run all unit tests
 * to activate from your local drive: `pub global activate -s path .`
+
+### Dependencies
+
+* [tekartik_pub](https://github.com/tekartik/tekartik_pub.dart)

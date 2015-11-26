@@ -55,7 +55,7 @@ main(List<String> arguments) async {
   bool verbose = _argsResult[_VERBOSE];
 
   CommandResult result =
-      await io.runInput(pubCmd(['global', 'list'])..connectIo = verbose);
+      await io.runCmd(pubCmd(['global', 'list'])..connectIo = verbose);
   var lines = LineSplitter.split(result.out);
 
   List<String> packages = _argsResult.rest;
@@ -79,7 +79,7 @@ main(List<String> arguments) async {
         cmdo = io;
       }
       stdout.writeln('updating: ${package}');
-      result = await cmdo.runInput(
+      result = await cmdo.runCmd(
           pubCmd(['global', 'activate']..addAll(package.activateArgs))
             ..connectIo = verbose || dryRun);
 
