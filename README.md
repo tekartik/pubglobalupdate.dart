@@ -17,4 +17,4 @@ pubglobalupdate
 ## Dev
 
 * before commit, run all unit tests
-* to activate from your local drive: `pub global activate -s path git://github.com/tekartik/pubglobalupdate.dart`
+* to activate from your local drive: `pub global activate -s path .`
