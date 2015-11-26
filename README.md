@@ -5,7 +5,7 @@ Command (Linux/Mac/Windows) to update all current global activated package their
 ## Activate
 
 ````
-pub global activate -s git git://github.com/alextekartik/alextk/script.dart
+pub global activate -s git git://github.com/tekartik/pubglobalupdate.dart
 ````
 
 ## Usage
@@ -13,3 +13,8 @@ pub global activate -s git git://github.com/alextekartik/alextk/script.dart
 ````
 pubglobalupdate
 ````
+
+## Dev
+
+* before commit, run all unit tests
+* to activate from your local drive: `pub global activate -s path git://github.com/tekartik/pubglobalupdate.dart`
