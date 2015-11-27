@@ -67,10 +67,10 @@ main(List<String> arguments) async {
         }
       }
 
-      List<String> arguments =
-          pubArguments(['global', 'activate']..addAll(package.activateArgs));
+      List<String> _pubArguments = ['global', 'activate']..addAll(package.activateArgs);
+      List<String> arguments = pubArguments(_pubArguments);
       if (dryRun) {
-        stdout.writeln(executableArgumentsToString(dartExecutable, arguments));
+        stdout.writeln(executableArgumentsToString('pub', _pubArguments));
       } else {
         stdout.writeln('updating: ${package}');
         result = await run(dartExecutable, arguments,

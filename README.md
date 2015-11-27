@@ -7,7 +7,7 @@ Command (Linux/Mac/Windows) to update all current global activated package their
 ## Activate
 
 ````
-pub global activate -s git git://github.com/tekartik/pubglobalupdate.dart
+pub global activate pubglobalupdate
 ````
 
 ## Usage
@@ -20,7 +20,7 @@ pubglobalupdate
 
 * before commit, run all unit tests
 * to activate from your local drive: `pub global activate -s path .`
-
+* to activate from git repository: `pub global activate -s git git://github.com/tekartik/pubglobalupdate.dart`
 ### Dependencies
 
-* [cmdo](https://github.com/tekartik/cmdo.dart)
+* [process_run](https://pub.dartlang.org/packages/process_run)
