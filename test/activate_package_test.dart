@@ -1,7 +1,7 @@
 @TestOn("vm")
 import 'package:dev_test/test.dart';
 
-import 'package:pubglobalupdate/global_package.dart';
+import 'package:pubglobalupdate/src/global_package.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:process_run/process_run.dart';
 import 'package:process_run/dartbin.dart';
@@ -100,7 +100,7 @@ main() {
       _findActivatedPackage();
     });
 
-    solo_test('hosted', () async {
+    test('hosted', () async {
       ProcessResult result;
       String packageName = 'stagehand';
       _findActivatedPackage() {

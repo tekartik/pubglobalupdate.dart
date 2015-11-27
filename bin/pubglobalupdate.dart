@@ -1,14 +1,17 @@
 #!/usr/bin/env dart
 library pubglobalupdate;
 
-// Pull recursively
-
 import 'dart:io';
 import 'package:args/args.dart';
 import 'package:process_run/process_run.dart';
 import 'package:process_run/dartbin.dart';
+import 'package:pub_semver/pub_semver.dart';
+import 'package:path/path.dart';
 import 'dart:convert';
-import 'package:pubglobalupdate/global_package.dart';
+import 'package:pubglobalupdate/src/global_package.dart';
+
+Version version = new Version(1, 0, 0);
+String get currentScriptName => basenameWithoutExtension(Platform.script.path);
 
 ///
 /// Recursively update (pull) git folders
@@ -18,7 +21,7 @@ main(List<String> arguments) async {
 
   ArgParser parser = new ArgParser(allowTrailingOptions: true);
   parser.addFlag('help', abbr: 'h', help: 'Usage help', negatable: false);
-  //parser.addOption(_LOG, abbr: 'l', help: 'Log level (fine, debug, info...)');
+  parser.addFlag('version', help: 'Display version', negatable: false);
   parser.addFlag('verbose', abbr: 'v', help: 'Verbose', negatable: false);
   parser.addFlag('dry-run',
       abbr: 'd',
@@ -30,7 +33,7 @@ main(List<String> arguments) async {
   if (help) {
     stdout.writeln("Update pub global activated package(s)");
     stdout.writeln();
-    stdout.writeln('Usage: pubglobalupdate [<pkg1> <pkg2>...]');
+    stdout.writeln('Usage: ${currentScriptName} [<pkg1> <pkg2>...]');
     stdout.writeln();
     stdout.writeln("By default all packages are updated");
     stdout.writeln();
@@ -38,13 +41,13 @@ main(List<String> arguments) async {
     stdout.writeln(parser.usage);
     return;
   }
-  /*
-  String logLevel = _argsResult[_LOG];
-  if (logLevel != null) {
-    Logger.root.level = parseLogLevel(logLevel);
-    Logger.root.info('Log level ${Logger.root.level}');
+
+  bool showVersion = _argsResult['version'];
+  if (showVersion) {
+    stdout.writeln('${currentScriptName} version ${version}');
+    return;
   }
-  */
+
   bool dryRun = _argsResult['dry-run'];
   bool verbose = _argsResult['verbose'];
 
@@ -67,7 +70,8 @@ main(List<String> arguments) async {
         }
       }
 
-      List<String> _pubArguments = ['global', 'activate']..addAll(package.activateArgs);
+      List<String> _pubArguments = ['global', 'activate']
+        ..addAll(package.activateArgs);
       List<String> arguments = pubArguments(_pubArguments);
       if (dryRun) {
         stdout.writeln(executableArgumentsToString('pub', _pubArguments));

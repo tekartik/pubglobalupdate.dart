@@ -1,6 +1,6 @@
 import 'package:dev_test/test.dart';
 
-import 'package:pubglobalupdate/global_package.dart';
+import 'package:pubglobalupdate/src/global_package.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 main() {

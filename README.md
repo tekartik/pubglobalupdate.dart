@@ -13,7 +13,27 @@ pub global activate pubglobalupdate
 ## Usage
 
 ````
-pubglobalupdate
+Usage: pubglobalupdate [<pkg1> <pkg2>...]
+
+By default all packages are updated
+
+Global options:
+-h, --help       Usage help
+    --version    Display version
+-v, --verbose    Verbose
+-d, --dry-run    Do not run test, simple show the command executed
+````
+
+Update all current activated packages
+
+````
+$ pubglobalupdate
+````
+
+Update one package
+
+````
+$ pubglobalupdate stagehand
 ````
 
 ## Dev
