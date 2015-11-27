@@ -8,6 +8,7 @@ environment:
 dependencies:
   args: any
   process_run: any
+  pub_semver: any
 dev_dependencies:
   dev_test: any
   test: any
