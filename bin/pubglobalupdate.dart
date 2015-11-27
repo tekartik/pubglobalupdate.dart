@@ -5,16 +5,10 @@ library pubglobalupdate;
 
 import 'dart:io';
 import 'package:args/args.dart';
-import 'package:cmdo/cmdo_io.dart';
-import 'package:cmdo/cmdo_dry.dart';
-import 'package:cmdo/dartbin.dart';
+import 'package:process_run/process_run.dart';
+import 'package:process_run/dartbin.dart';
 import 'dart:convert';
 import 'package:pubglobalupdate/global_package.dart';
-
-const String _HELP = 'help';
-const String _LOG = 'log';
-const String _DRY_RUN = 'dry-run';
-const String _VERBOSE = 'verbose';
 
 ///
 /// Recursively update (pull) git folders
@@ -23,16 +17,16 @@ main(List<String> arguments) async {
   //setupQuickLogging();
 
   ArgParser parser = new ArgParser(allowTrailingOptions: true);
-  parser.addFlag(_HELP, abbr: 'h', help: 'Usage help', negatable: false);
+  parser.addFlag('help', abbr: 'h', help: 'Usage help', negatable: false);
   //parser.addOption(_LOG, abbr: 'l', help: 'Log level (fine, debug, info...)');
-  parser.addFlag(_VERBOSE, abbr: 'v', help: 'Verbose', negatable: false);
-  parser.addFlag(_DRY_RUN,
+  parser.addFlag('verbose', abbr: 'v', help: 'Verbose', negatable: false);
+  parser.addFlag('dry-run',
       abbr: 'd',
       help: 'Do not run test, simple show the command executed',
       negatable: false);
   ArgResults _argsResult = parser.parse(arguments);
 
-  bool help = _argsResult[_HELP];
+  bool help = _argsResult['help'];
   if (help) {
     stdout.writeln("Update pub global activated package(s)");
     stdout.writeln();
@@ -51,12 +45,13 @@ main(List<String> arguments) async {
     Logger.root.info('Log level ${Logger.root.level}');
   }
   */
-  bool dryRun = _argsResult[_DRY_RUN];
-  bool verbose = _argsResult[_VERBOSE];
+  bool dryRun = _argsResult['dry-run'];
+  bool verbose = _argsResult['verbose'];
 
-  CommandResult result =
-      await io.runCmd(pubCmd(['global', 'list'])..connectIo = verbose);
-  var lines = LineSplitter.split(result.out);
+  ProcessResult result = await run(
+      dartExecutable, pubArguments(['global', 'list']),
+      connectStdout: verbose, connectStderr: verbose);
+  var lines = LineSplitter.split(result.stdout);
 
   List<String> packages = _argsResult.rest;
 
@@ -72,18 +67,18 @@ main(List<String> arguments) async {
         }
       }
 
-      CommandExecutor cmdo;
+      List<String> arguments =
+          pubArguments(['global', 'activate']..addAll(package.activateArgs));
       if (dryRun) {
-        cmdo = dry;
+        stdout.writeln(executableArgumentsToString(dartExecutable, arguments));
       } else {
-        cmdo = io;
+        stdout.writeln('updating: ${package}');
+        result = await run(dartExecutable, arguments,
+            connectStdout: verbose, connectStderr: verbose);
       }
-      stdout.writeln('updating: ${package}');
-      result = await cmdo.runCmd(
-          pubCmd(['global', 'activate']..addAll(package.activateArgs))
-            ..connectIo = verbose || dryRun);
 
-      for (String line in result.output.outLines) {
+      lines = LineSplitter.split(result.stdout);
+      for (String line in lines) {
         GlobalPackage updatedPackage =
             GlobalPackage.fromActivatedLine(line, package.name);
         if (updatedPackage != null &&
