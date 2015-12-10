@@ -70,8 +70,8 @@ main() {
 
     test('git', () async {
       ProcessResult result;
-      String packageName = 'cmdo';
-      String source = 'https://github.com/tekartik/cmdo.dart';
+      String packageName = 'process_run';
+      String source = 'https://github.com/tekartik/process_run.dart';
       _findActivatedPackage() {
         GlobalGitPackage foundPackage;
         //print(result);

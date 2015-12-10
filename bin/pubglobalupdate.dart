@@ -70,7 +70,7 @@ main(List<String> arguments) async {
         }
       }
 
-      List<String> _pubArguments = ['global', 'activate']
+      List<String> _pubArguments = <String>['global', 'activate']
         ..addAll(package.activateArgs);
       List<String> arguments = pubArguments(_pubArguments);
       if (dryRun) {
