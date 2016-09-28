@@ -1,16 +1,17 @@
 #!/usr/bin/env dart
 library pubglobalupdate;
 
-import 'dart:io';
-import 'package:args/args.dart';
-import 'package:process_run/process_run.dart';
-import 'package:process_run/dartbin.dart';
-import 'package:pub_semver/pub_semver.dart';
-import 'package:path/path.dart';
 import 'dart:convert';
+import 'dart:io';
+
+import 'package:args/args.dart';
+import 'package:path/path.dart';
+import 'package:process_run/cmd_run.dart';
+import 'package:pub_semver/pub_semver.dart';
 import 'package:pubglobalupdate/src/global_package.dart';
 
 Version version = new Version(1, 0, 0);
+
 String get currentScriptName => basenameWithoutExtension(Platform.script.path);
 
 ///
@@ -51,9 +52,8 @@ main(List<String> arguments) async {
   bool dryRun = _argsResult['dry-run'];
   bool verbose = _argsResult['verbose'];
 
-  ProcessResult result = await run(
-      dartExecutable, pubArguments(['global', 'list']),
-      connectStdout: verbose, connectStderr: verbose);
+  ProcessResult result = await runCmd(
+      pubCmd(['global', 'list']), verbose: verbose);
   var lines = LineSplitter.split(result.stdout);
 
   List<String> packages = _argsResult.rest;
@@ -72,19 +72,18 @@ main(List<String> arguments) async {
 
       List<String> _pubArguments = <String>['global', 'activate']
         ..addAll(package.activateArgs);
-      List<String> arguments = pubArguments(_pubArguments);
+      ProcessCmd cmd = pubCmd(_pubArguments);
       if (dryRun) {
-        stdout.writeln(executableArgumentsToString('pub', _pubArguments));
+        stdout.writeln(cmd);
       } else {
         stdout.writeln('updating: ${package}');
-        result = await run(dartExecutable, arguments,
-            connectStdout: verbose, connectStderr: verbose);
+        result = await runCmd(cmd, verbose: verbose);
       }
 
       lines = LineSplitter.split(result.stdout);
       for (String line in lines) {
         GlobalPackage updatedPackage =
-            GlobalPackage.fromActivatedLine(line, package.name);
+        GlobalPackage.fromActivatedLine(line, package.name);
         if (updatedPackage != null &&
             (verbose || (updatedPackage.version != package.version))) {
           stdout.writeln('updated: ${updatedPackage}');
