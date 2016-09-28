@@ -6,13 +6,13 @@ homepage: https://github.com/tekartik/pubglobalupdate.dart
 environment:
   sdk: '>=1.0.0 <2.0.0'
 dependencies:
-  args: any
-  process_run: any
-  pub_semver: any
-  path: any
+  args: '>=0.13.5'
+  process_run: '>=0.5.0'
+  pub_semver: '>=1.3.0'
+  path: '>=1.3.9'
 dev_dependencies:
-  dev_test: any
-  test: any
+  dev_test: '>=0.9.3'
+  test: '>=0.12.15'
 executables:
   pubglobalupdate:
 #dependency_overrides:
