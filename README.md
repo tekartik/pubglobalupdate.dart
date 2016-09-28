@@ -1,6 +1,6 @@
 # pubglobalupdate.dart
 
-Command (Linux/Mac/Windows) to update all current global activated package their latest version
+Command (Linux/Mac/Windows) to update all current global activated packages to their latest version
 
 [![Build Status](https://travis-ci.org/tekartik/pubglobalupdate.dart.svg)](https://travis-ci.org/tekartik/pubglobalupdate.dart)
 
