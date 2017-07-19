@@ -52,8 +52,8 @@ main(List<String> arguments) async {
   bool dryRun = _argsResult['dry-run'];
   bool verbose = _argsResult['verbose'];
 
-  ProcessResult result = await runCmd(
-      pubCmd(['global', 'list']), verbose: verbose);
+  ProcessResult result =
+      await runCmd(pubCmd(['global', 'list']), verbose: verbose);
   var lines = LineSplitter.split(result.stdout);
 
   List<String> packages = _argsResult.rest;
@@ -83,7 +83,7 @@ main(List<String> arguments) async {
       lines = LineSplitter.split(result.stdout);
       for (String line in lines) {
         GlobalPackage updatedPackage =
-        GlobalPackage.fromActivatedLine(line, package.name);
+            GlobalPackage.fromActivatedLine(line, package.name);
         if (updatedPackage != null &&
             (verbose || (updatedPackage.version != package.version))) {
           stdout.writeln('updated: ${updatedPackage}');

@@ -63,6 +63,7 @@ abstract class GlobalPackage {
         bool _isPartPath(int index) {
           return parts[index].toLowerCase() == 'path';
         }
+
         if (_isPartPath(parts.length - 2) || _isPartPath(parts.length - 3)) {
           package = new GlobalPathPackage();
         }

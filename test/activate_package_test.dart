@@ -51,6 +51,7 @@ main() {
         expect(foundPackage.version, new Version(1, 0, 0));
         expect(foundPackage.source, endsWith(join('data', 'test_package')));
       }
+
       result = await run(
           dartExecutable,
           pubArguments([
