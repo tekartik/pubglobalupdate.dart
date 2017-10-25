@@ -1,6 +1,7 @@
 # pubglobalupdate.dart
 
-Command (Linux/Mac/Windows) to update all current global activated packages to their latest version
+Command (Linux/Mac/Windows) to update all current global activated packages (git, path or hosted) 
+to their latest version
 
 [![Build Status](https://travis-ci.org/tekartik/pubglobalupdate.dart.svg)](https://travis-ci.org/tekartik/pubglobalupdate.dart)
 
@@ -41,6 +42,7 @@ $ pubglobalupdate stagehand
 * before commit, run all unit tests
 * to activate from your local drive: `pub global activate -s path .`
 * to activate from git repository: `pub global activate -s git git://github.com/tekartik/pubglobalupdate.dart`
+
 ### Dependencies
 
 * [process_run](https://pub.dartlang.org/packages/process_run)
