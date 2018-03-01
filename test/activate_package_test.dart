@@ -40,9 +40,9 @@ main() {
       String packageName = 'tekartik_pubglobalupdate_test_package';
       _findActivatedPackage() {
         GlobalPathPackage foundPackage;
-        for (String line in LineSplitter.split(result.stdout)) {
-          GlobalPathPackage package =
-              GlobalPackage.fromActivatedLine(line, packageName);
+        for (String line in LineSplitter.split(result.stdout.toString())) {
+          GlobalPathPackage package = GlobalPackage.fromActivatedLine(
+              line, packageName) as GlobalPathPackage;
           if (package != null) {
             foundPackage = package;
           }
@@ -76,9 +76,9 @@ main() {
       _findActivatedPackage() {
         GlobalGitPackage foundPackage;
         //print(result);
-        for (String line in LineSplitter.split(result.stdout)) {
-          GlobalGitPackage package =
-              GlobalPackage.fromActivatedLine(line, packageName);
+        for (String line in LineSplitter.split(result.stdout.toString())) {
+          GlobalGitPackage package = GlobalPackage.fromActivatedLine(
+              line, packageName) as GlobalGitPackage;
           if (package != null) {
             foundPackage = package;
           }
@@ -107,9 +107,9 @@ main() {
       _findActivatedPackage() {
         GlobalHostedPackage foundPackage;
         //print(result);
-        for (String line in LineSplitter.split(result.stdout)) {
-          GlobalHostedPackage package =
-              GlobalPackage.fromActivatedLine(line, packageName);
+        for (String line in LineSplitter.split(result.stdout.toString())) {
+          GlobalHostedPackage package = GlobalPackage.fromActivatedLine(
+              line, packageName) as GlobalHostedPackage;
           if (package != null) {
             foundPackage = package;
           }

@@ -30,7 +30,7 @@ main(List<String> arguments) async {
       negatable: false);
   ArgResults _argsResult = parser.parse(arguments);
 
-  bool help = _argsResult['help'];
+  bool help = _argsResult['help'] as bool;
   if (help) {
     stdout.writeln("Update pub global activated package(s)");
     stdout.writeln();
@@ -43,18 +43,18 @@ main(List<String> arguments) async {
     return;
   }
 
-  bool showVersion = _argsResult['version'];
+  bool showVersion = _argsResult['version'] as bool;
   if (showVersion) {
     stdout.writeln('${currentScriptName} version ${version}');
     return;
   }
 
-  bool dryRun = _argsResult['dry-run'];
-  bool verbose = _argsResult['verbose'];
+  bool dryRun = _argsResult['dry-run'] as bool;
+  bool verbose = _argsResult['verbose'] as bool;
 
   ProcessResult result =
       await runCmd(pubCmd(['global', 'list']), verbose: verbose);
-  var lines = LineSplitter.split(result.stdout);
+  var lines = LineSplitter.split(result.stdout.toString());
 
   List<String> packages = _argsResult.rest;
 
@@ -80,7 +80,7 @@ main(List<String> arguments) async {
         result = await runCmd(cmd, verbose: verbose);
       }
 
-      lines = LineSplitter.split(result.stdout);
+      lines = LineSplitter.split(result.stdout.toString());
       for (String line in lines) {
         GlobalPackage updatedPackage =
             GlobalPackage.fromActivatedLine(line, package.name);

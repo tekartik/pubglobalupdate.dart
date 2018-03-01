@@ -110,14 +110,14 @@ class GlobalHostedPackage extends GlobalPackage {
   List<String> get activateArgs => [name];
 }
 
-_insetString(String source, [int offset = 1]) {
+String _insetString(String source, [int offset = 1]) {
   return source.substring(offset, source.length - offset);
 }
 
 ///
 /// remove enclosing " or '
 ///
-_extractSource(String source) {
+String _extractSource(String source) {
   if (source.startsWith('"') && source.endsWith('"')) {
     return _extractSource(_insetString(source));
   }
