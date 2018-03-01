@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.3
+
+* Add `implicit-cast: false` support
+
 ## 0.3.2
 
 * Update dependencies to their latest version
