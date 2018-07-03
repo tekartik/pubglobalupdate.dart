@@ -10,15 +10,10 @@ import 'dart:convert';
 import 'dart:mirrors';
 import 'package:path/path.dart';
 
-class _TestUtils {
-  static final String scriptPath =
-      (reflectClass(_TestUtils).owner as LibraryMirror).uri.toFilePath();
-}
-
-String get testScriptPath => _TestUtils.scriptPath;
+String get testScriptDirPath => 'test';
 
 String get pubglobalupdateScript =>
-    join(dirname(dirname(testScriptPath)), 'bin', 'pubglobalupdate.dart');
+    join(dirname(testScriptDirPath), 'bin', 'pubglobalupdate.dart');
 
 GlobalPackage fromUpdatedLine(String line, String packageName) {
   String updated = "updated: ";
@@ -59,7 +54,7 @@ main() {
             'activate',
             '-s',
             'path',
-            join(dirname(testScriptPath), 'data', 'test_package'),
+            join(testScriptDirPath, 'data', 'test_package'),
             '--overwrite'
           ]));
       _findActivatedPackage();
@@ -75,10 +70,10 @@ main() {
       String source = 'https://github.com/tekartik/process_run.dart';
       _findActivatedPackage() {
         GlobalGitPackage foundPackage;
-        //print(result);
+        // print(result.stdout);
         for (String line in LineSplitter.split(result.stdout.toString())) {
-          GlobalGitPackage package = GlobalPackage.fromActivatedLine(
-              line, packageName) as GlobalGitPackage;
+          GlobalGitPackage package =
+              GlobalPackage.fromListLine(line) as GlobalGitPackage;
           if (package != null) {
             foundPackage = package;
           }
@@ -93,13 +88,13 @@ main() {
           dartExecutable,
           pubArguments(
               ['global', 'activate', '-s', 'git', source, '--overwrite']));
-
+      result = await run(dartExecutable, pubArguments(['global', 'list']));
       _findActivatedPackage();
 
       result =
           await run(dartExecutable, [pubglobalupdateScript, '-v', packageName]);
       _findActivatedPackage();
-    });
+    }, skip: 'process_run is longer valid on dart1');
 
     test('hosted', () async {
       ProcessResult result;
