@@ -1,14 +1,16 @@
 @TestOn("vm")
-import 'package:dev_test/test.dart';
+library pubglobalupdate.test.activate_package_test;
 
-import 'package:pubglobalupdate/src/global_package.dart';
-import 'package:pub_semver/pub_semver.dart';
-import 'package:process_run/process_run.dart';
-import 'package:process_run/dartbin.dart';
-import 'dart:io';
 import 'dart:convert';
-import 'dart:mirrors';
+import 'dart:io';
+
+import 'package:dev_test/test.dart';
 import 'package:path/path.dart';
+import 'package:process_run/cmd_run.dart';
+import 'package:process_run/dartbin.dart';
+import 'package:process_run/process_run.dart';
+import 'package:pub_semver/pub_semver.dart';
+import 'package:pubglobalupdate/src/global_package.dart';
 
 String get testScriptDirPath => 'test';
 
@@ -36,8 +38,9 @@ main() {
       _findActivatedPackage() {
         GlobalPathPackage foundPackage;
         for (String line in LineSplitter.split(result.stdout.toString())) {
-          GlobalPathPackage package = GlobalPackage.fromActivatedLine(
-              line, packageName) as GlobalPathPackage;
+          GlobalPathPackage package =
+              GlobalPackage.fromActivatedLine(line, packageName)
+                  as GlobalPathPackage;
           if (package != null) {
             foundPackage = package;
           }
@@ -47,16 +50,15 @@ main() {
         expect(foundPackage.source, endsWith(join('data', 'test_package')));
       }
 
-      result = await run(
-          dartExecutable,
-          pubArguments([
-            'global',
-            'activate',
-            '-s',
-            'path',
-            join(testScriptDirPath, 'data', 'test_package'),
-            '--overwrite'
-          ]));
+      var cmd = pubCmd([
+        'global',
+        'activate',
+        '-s',
+        'path',
+        join(testScriptDirPath, 'data', 'test_package'),
+        '--overwrite'
+      ]);
+      result = await runCmd(cmd);
       _findActivatedPackage();
 
       result =
@@ -84,11 +86,9 @@ main() {
         expect(foundPackage.source, source);
       }
 
-      result = await run(
-          dartExecutable,
-          pubArguments(
-              ['global', 'activate', '-s', 'git', source, '--overwrite']));
-      result = await run(dartExecutable, pubArguments(['global', 'list']));
+      result = await runCmd(
+          pubCmd(['global', 'activate', '-s', 'git', source, '--overwrite']));
+      result = await runCmd(pubCmd(['global', 'list']));
       _findActivatedPackage();
 
       result =
@@ -103,8 +103,9 @@ main() {
         GlobalHostedPackage foundPackage;
         //print(result);
         for (String line in LineSplitter.split(result.stdout.toString())) {
-          GlobalHostedPackage package = GlobalPackage.fromActivatedLine(
-              line, packageName) as GlobalHostedPackage;
+          GlobalHostedPackage package =
+              GlobalPackage.fromActivatedLine(line, packageName)
+                  as GlobalHostedPackage;
           if (package != null) {
             foundPackage = package;
           }
@@ -114,8 +115,8 @@ main() {
             foundPackage.version, greaterThanOrEqualTo(new Version(0, 1, 0)));
       }
 
-      result = await run(dartExecutable,
-          pubArguments(['global', 'activate', '--overwrite', packageName]));
+      result = await runCmd(
+          pubCmd(['global', 'activate', '--overwrite', packageName]));
 
       _findActivatedPackage();
 
