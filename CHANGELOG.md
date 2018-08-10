@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0
+
+* Dart2 support
+
 ## 0.3.3
 
 * Add `implicit-cast: false` support
