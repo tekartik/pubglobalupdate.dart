@@ -1,7 +1,7 @@
 language: dart
 # with_content_shell: true
 dart:
-#  - stable
+  - stable
   - dev
 sudo: false
 before_install:
