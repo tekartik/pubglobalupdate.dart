@@ -1,6 +1,7 @@
 #!/usr/bin/env dart
 library pubglobalupdate;
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -10,17 +11,17 @@ import 'package:process_run/cmd_run.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:pubglobalupdate/src/global_package.dart';
 
-Version version = new Version(1, 0, 0);
+Version version = Version(1, 0, 0);
 
 String get currentScriptName => basenameWithoutExtension(Platform.script.path);
 
 ///
 /// Recursively update (pull) git folders
 ///
-main(List<String> arguments) async {
+Future main(List<String> arguments) async {
   //setupQuickLogging();
 
-  ArgParser parser = new ArgParser(allowTrailingOptions: true);
+  ArgParser parser = ArgParser(allowTrailingOptions: true);
   parser.addFlag('help', abbr: 'h', help: 'Usage help', negatable: false);
   parser.addFlag('version', help: 'Display version', negatable: false);
   parser.addFlag('verbose', abbr: 'v', help: 'Verbose', negatable: false);
@@ -53,7 +54,7 @@ main(List<String> arguments) async {
   bool verbose = _argsResult['verbose'] as bool;
 
   ProcessResult result =
-      await runCmd(pubCmd(['global', 'list']), verbose: verbose);
+      await runCmd(PubCmd(['global', 'list']), verbose: verbose);
   var lines = LineSplitter.split(result.stdout.toString());
 
   List<String> packages = _argsResult.rest;
@@ -72,7 +73,7 @@ main(List<String> arguments) async {
 
       List<String> _pubArguments = <String>['global', 'activate']
         ..addAll(package.activateArgs);
-      ProcessCmd cmd = pubCmd(_pubArguments);
+      ProcessCmd cmd = PubCmd(_pubArguments);
       if (dryRun) {
         stdout.writeln(cmd);
       } else {

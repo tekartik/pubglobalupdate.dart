@@ -3,7 +3,7 @@ import 'package:dev_test/test.dart';
 import 'package:pubglobalupdate/src/global_package.dart';
 import 'package:pub_semver/pub_semver.dart';
 
-main() {
+void main() {
   group('global_package', () {
     test('hosted', () {
       // pub global activate markdown
@@ -11,14 +11,14 @@ main() {
       GlobalHostedPackage package =
           GlobalPackage.fromListLine(line) as GlobalHostedPackage;
       expect(package.name, "markdown");
-      expect(package.version, new Version(0, 9, 0));
+      expect(package.version, Version(0, 9, 0));
       expect(package.activateArgs, ['markdown']);
 
       String activatedLine = "Activated markdown 0.10.0.";
       package = GlobalPackage.fromActivatedLine(activatedLine, package.name)
           as GlobalHostedPackage;
       expect(package.name, "markdown");
-      expect(package.version, new Version(0, 10, 0));
+      expect(package.version, Version(0, 10, 0));
       expect(package.activateArgs, ['markdown']);
 
       expect(GlobalPackage.fromActivatedLine(activatedLine, "dummy"), isNull);
@@ -31,7 +31,7 @@ main() {
       GlobalGitPackage package =
           GlobalPackage.fromListLine(line) as GlobalGitPackage;
       expect(package.name, "pubglobalupdate");
-      expect(package.version, greaterThanOrEqualTo(new Version(0, 1, 0)));
+      expect(package.version, greaterThanOrEqualTo(Version(0, 1, 0)));
       expect(
           package.source, "https://github.com/tekartik/pubglobalupdate.dart");
       expect(package.activateArgs, [
@@ -48,7 +48,7 @@ main() {
       GlobalPathPackage package =
           GlobalPackage.fromListLine(line) as GlobalPathPackage;
       expect(package.name, "tekartik_script");
-      expect(package.version, greaterThanOrEqualTo(new Version(0, 1, 0)));
+      expect(package.version, greaterThanOrEqualTo(Version(0, 1, 0)));
       expect(package.source,
           "/media/ssd/devx/git/bitbucket.org/alextk/script.dart");
       expect(package.activateArgs, [

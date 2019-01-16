@@ -24,7 +24,7 @@ abstract class GlobalPackage {
       // first is package name, last is path
       name = parts[0];
       try {
-        version = new Version.parse(parts[1]);
+        version = Version.parse(parts[1]);
       } catch (_) {
         return null;
       }
@@ -38,7 +38,7 @@ abstract class GlobalPackage {
     // pub.dartlang.org hosted package
     // ignore name
     if (parts.length == 2) {
-      package = new GlobalHostedPackage();
+      package = GlobalHostedPackage();
     } else if (parts.length >= 4) {
       //
       // handle git first
@@ -51,7 +51,7 @@ abstract class GlobalPackage {
 
       // look for git in the 2 arguments preceding the source
       if (_isPartGit(parts.length - 2) || _isPartGit(parts.length - 3)) {
-        package = new GlobalGitPackage();
+        package = GlobalGitPackage();
       }
 
       if (package == null) {
@@ -65,7 +65,7 @@ abstract class GlobalPackage {
         }
 
         if (_isPartPath(parts.length - 2) || _isPartPath(parts.length - 3)) {
-          package = new GlobalPathPackage();
+          package = GlobalPathPackage();
         }
       }
 
@@ -107,6 +107,7 @@ abstract class GlobalPackage {
 class GlobalHostedPackage extends GlobalPackage {
   GlobalHostedPackage();
 
+  @override
   List<String> get activateArgs => [name];
 }
 
@@ -133,6 +134,7 @@ abstract class GlobalSourcePackage extends GlobalPackage {
   set source(String source) => _source = _extractSource(source);
   String get sourceType;
 
+  @override
   List<String> get activateArgs => ['--source', sourceType, source];
 
   @override
@@ -140,9 +142,11 @@ abstract class GlobalSourcePackage extends GlobalPackage {
 }
 
 class GlobalGitPackage extends GlobalSourcePackage {
+  @override
   String get sourceType => 'git';
 }
 
 class GlobalPathPackage extends GlobalSourcePackage {
+  @override
   String get sourceType => 'path';
 }

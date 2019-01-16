@@ -2,7 +2,7 @@ import 'package:dev_test/test.dart';
 
 import 'package:pubglobalupdate/src/utils.dart';
 
-main() {
+void main() {
   group('utils', () {
     test('insetString', () {
       expect(insetString("aba"), "b");

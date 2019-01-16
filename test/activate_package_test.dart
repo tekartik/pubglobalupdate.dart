@@ -30,12 +30,12 @@ GlobalPackage fromUpdatedLine(String line, String packageName) {
   return null;
 }
 
-main() {
+void main() {
   group('activate_package', () {
     test('path', () async {
       ProcessResult result;
       String packageName = 'tekartik_pubglobalupdate_test_package';
-      _findActivatedPackage() {
+      void _findActivatedPackage() {
         GlobalPathPackage foundPackage;
         for (String line in LineSplitter.split(result.stdout.toString())) {
           GlobalPathPackage package =
@@ -46,11 +46,11 @@ main() {
           }
         }
         expect(foundPackage.name, packageName);
-        expect(foundPackage.version, new Version(1, 0, 0));
+        expect(foundPackage.version, Version(1, 0, 0));
         expect(foundPackage.source, endsWith(join('data', 'test_package')));
       }
 
-      var cmd = pubCmd([
+      var cmd = PubCmd([
         'global',
         'activate',
         '-s',
@@ -70,7 +70,7 @@ main() {
       ProcessResult result;
       String packageName = 'process_run';
       String source = 'https://github.com/tekartik/process_run.dart';
-      _findActivatedPackage() {
+      void _findActivatedPackage() {
         GlobalGitPackage foundPackage;
         // print(result.stdout);
         for (String line in LineSplitter.split(result.stdout.toString())) {
@@ -81,25 +81,24 @@ main() {
           }
         }
         expect(foundPackage.name, packageName);
-        expect(
-            foundPackage.version, greaterThanOrEqualTo(new Version(0, 1, 0)));
+        expect(foundPackage.version, greaterThanOrEqualTo(Version(0, 1, 0)));
         expect(foundPackage.source, source);
       }
 
       result = await runCmd(
-          pubCmd(['global', 'activate', '-s', 'git', source, '--overwrite']));
-      result = await runCmd(pubCmd(['global', 'list']));
+          PubCmd(['global', 'activate', '-s', 'git', source, '--overwrite']));
+      result = await runCmd(PubCmd(['global', 'list']));
       _findActivatedPackage();
 
       result =
           await run(dartExecutable, [pubglobalupdateScript, '-v', packageName]);
       _findActivatedPackage();
-    }, skip: 'process_run is longer valid on dart1');
+    }, skip: 'process_run is no longer valid on dart1');
 
     test('hosted', () async {
       ProcessResult result;
       String packageName = 'stagehand';
-      _findActivatedPackage() {
+      void _findActivatedPackage() {
         GlobalHostedPackage foundPackage;
         //print(result);
         for (String line in LineSplitter.split(result.stdout.toString())) {
@@ -111,12 +110,11 @@ main() {
           }
         }
         expect(foundPackage.name, packageName);
-        expect(
-            foundPackage.version, greaterThanOrEqualTo(new Version(0, 1, 0)));
+        expect(foundPackage.version, greaterThanOrEqualTo(Version(0, 1, 0)));
       }
 
       result = await runCmd(
-          pubCmd(['global', 'activate', '--overwrite', packageName]));
+          PubCmd(['global', 'activate', '--overwrite', packageName]));
 
       _findActivatedPackage();
 
