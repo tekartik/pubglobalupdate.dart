@@ -116,13 +116,13 @@ String _insetString(String source, [int offset = 1]) {
 }
 
 ///
-/// remove enclosing ' or '
+/// remove enclosing " or '
 ///
 String _extractSource(String source) {
-  if (source.startsWith(''') && source.endsWith(''')) {
+  if (source.startsWith('"') && source.endsWith('"')) {
     return _extractSource(_insetString(source));
   }
-  if (source.startsWith(''') && source.endsWith(''')) {
+  if (source.startsWith("'") && source.endsWith("'")) {
     return _extractSource(_insetString(source));
   }
   return source;

@@ -42,7 +42,7 @@ void main() {
     test('path', () {
       // pub global activate --source path /media/ssd/devx/git/bitbucket.org/alextk/script.dart
       final line =
-          "tekartik_script 0.1.0 at path '/media/ssd/devx/git/bitbucket.org/alextk/script.dart'";
+          'tekartik_script 0.1.0 at path "/media/ssd/devx/git/bitbucket.org/alextk/script.dart"';
       final package = GlobalPackage.fromListLine(line) as GlobalPathPackage;
       expect(package.name, 'tekartik_script');
       expect(package.version, greaterThanOrEqualTo(Version(0, 1, 0)));
