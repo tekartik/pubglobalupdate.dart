@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.2
+
+* Pedantic 1.9 support
+
 ## 0.4.0
 
 * Dart2 support
