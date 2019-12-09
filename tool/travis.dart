@@ -10,8 +10,5 @@ dartfmt -n --set-exit-if-changed .
 
 # Run tests
 pub run test -p vm
-
-# Run tests using build_runner
-pub run build_runner test -- -p vm -r expanded
 ''');
 }
