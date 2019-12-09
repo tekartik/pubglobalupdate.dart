@@ -14,6 +14,8 @@ dev_dependencies:
   pedantic: '>=1.4.0'
   dev_test: '>=0.12.0'
   test: any
+  io:
+  yaml:
 executables:
   pubglobalupdate:
 
