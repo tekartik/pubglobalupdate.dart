@@ -13,7 +13,7 @@ abstract class GlobalPackage {
   ///
   static GlobalPackage fromListLine(String line) {
     // split the line by spaces to get the arguments
-    var parts = line.split(" ");
+    var parts = line.split(' ');
 
     GlobalPackage package;
     String name;
@@ -43,7 +43,7 @@ abstract class GlobalPackage {
       //
       // handle git first
       //
-      // tekartik_io_tools 0.7.1 from Git repository "https://github.com/alextekartik/tekartik_io_tools.dart"
+      // tekartik_io_tools 0.7.1 from Git repository 'https://github.com/alextekartik/tekartik_io_tools.dart'
       // since 'from Git repository' might change, handle the 'git' word in the 2 words preceeding the source (last)
       bool _isPartGit(int index) {
         return parts[index].toLowerCase() == 'git';
@@ -58,7 +58,7 @@ abstract class GlobalPackage {
         //
         // handle part
         //
-        // tekartik_io_tools 0.7.1 at path "/media/ssd/devx/git/github.com/alextekartik/tekartik_io_tools.dart"
+        // tekartik_io_tools 0.7.1 at path '/media/ssd/devx/git/github.com/alextekartik/tekartik_io_tools.dart'
         // since 'at path' might change, handle the 'path' word  in the 2 words preceeding the source (last)
         bool _isPartPath(int index) {
           return parts[index].toLowerCase() == 'path';
@@ -83,16 +83,16 @@ abstract class GlobalPackage {
   }
 
   static GlobalPackage fromActivatedLine(String line, String packageName) {
-    String activated = "activated";
+    final activated = 'activated';
     if (line.toLowerCase().startsWith(activated)) {
-      int start = line.indexOf(packageName, activated.length);
+      final start = line.indexOf(packageName, activated.length);
       if (start != -1) {
         line = line.substring(start);
         // removing ending . if any
         if (line.endsWith('.')) {
           line = line.substring(0, line.length - 1);
         }
-        GlobalPackage updatedPackage = GlobalPackage.fromListLine(line);
+        final updatedPackage = GlobalPackage.fromListLine(line);
         return updatedPackage;
       }
     }
@@ -116,13 +116,13 @@ String _insetString(String source, [int offset = 1]) {
 }
 
 ///
-/// remove enclosing " or '
+/// remove enclosing ' or '
 ///
 String _extractSource(String source) {
-  if (source.startsWith('"') && source.endsWith('"')) {
+  if (source.startsWith(''') && source.endsWith(''')) {
     return _extractSource(_insetString(source));
   }
-  if (source.startsWith("'") && source.endsWith("'")) {
+  if (source.startsWith(''') && source.endsWith(''')) {
     return _extractSource(_insetString(source));
   }
   return source;

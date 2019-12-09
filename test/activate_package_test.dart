@@ -1,4 +1,4 @@
-@TestOn("vm")
+@TestOn('vm')
 library pubglobalupdate.test.activate_package_test;
 
 import 'dart:convert';
@@ -18,13 +18,13 @@ String get pubglobalupdateScript =>
     join(dirname(testScriptDirPath), 'bin', 'pubglobalupdate.dart');
 
 GlobalPackage fromUpdatedLine(String line, String packageName) {
-  String updated = "updated: ";
+  final updated = 'updated: ';
   if (line.toLowerCase().startsWith(updated)) {
-    int start = line.indexOf(packageName, updated.length);
+    final start = line.indexOf(packageName, updated.length);
     if (start != -1) {
       line = line.substring(0, line.length - 1);
     }
-    GlobalPackage updatedPackage = GlobalPackage.fromListLine(line);
+    final updatedPackage = GlobalPackage.fromListLine(line);
     return updatedPackage;
   }
   return null;
@@ -34,13 +34,12 @@ void main() {
   group('activate_package', () {
     test('path', () async {
       ProcessResult result;
-      String packageName = 'tekartik_pubglobalupdate_test_package';
+      final packageName = 'tekartik_pubglobalupdate_test_package';
       void _findActivatedPackage() {
         GlobalPathPackage foundPackage;
-        for (String line in LineSplitter.split(result.stdout.toString())) {
-          GlobalPathPackage package =
-              GlobalPackage.fromActivatedLine(line, packageName)
-                  as GlobalPathPackage;
+        for (final line in LineSplitter.split(result.stdout.toString())) {
+          final package = GlobalPackage.fromActivatedLine(line, packageName)
+              as GlobalPathPackage;
           if (package != null) {
             foundPackage = package;
           }
@@ -68,14 +67,13 @@ void main() {
 
     test('git', () async {
       ProcessResult result;
-      String packageName = 'process_run';
-      String source = 'https://github.com/tekartik/process_run.dart';
+      final packageName = 'process_run';
+      final source = 'https://github.com/tekartik/process_run.dart';
       void _findActivatedPackage() {
         GlobalGitPackage foundPackage;
         // print(result.stdout);
-        for (String line in LineSplitter.split(result.stdout.toString())) {
-          GlobalGitPackage package =
-              GlobalPackage.fromListLine(line) as GlobalGitPackage;
+        for (final line in LineSplitter.split(result.stdout.toString())) {
+          final package = GlobalPackage.fromListLine(line) as GlobalGitPackage;
           if (package != null) {
             foundPackage = package;
           }
@@ -97,14 +95,13 @@ void main() {
 
     test('hosted', () async {
       ProcessResult result;
-      String packageName = 'stagehand';
+      final packageName = 'stagehand';
       void _findActivatedPackage() {
         GlobalHostedPackage foundPackage;
         //print(result);
-        for (String line in LineSplitter.split(result.stdout.toString())) {
-          GlobalHostedPackage package =
-              GlobalPackage.fromActivatedLine(line, packageName)
-                  as GlobalHostedPackage;
+        for (final line in LineSplitter.split(result.stdout.toString())) {
+          final package = GlobalPackage.fromActivatedLine(line, packageName)
+              as GlobalHostedPackage;
           if (package != null) {
             foundPackage = package;
           }

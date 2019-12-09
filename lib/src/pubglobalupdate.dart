@@ -21,7 +21,7 @@ String get currentScriptName => basenameWithoutExtension(Platform.script.path);
 Future main(List<String> arguments) async {
   //setupQuickLogging();
 
-  ArgParser parser = ArgParser(allowTrailingOptions: true);
+  final parser = ArgParser(allowTrailingOptions: true);
   parser.addFlag('help', abbr: 'h', help: 'Usage help', negatable: false);
   parser.addFlag('version', help: 'Display version', negatable: false);
   parser.addFlag('verbose', abbr: 'v', help: 'Verbose', negatable: false);
@@ -29,38 +29,37 @@ Future main(List<String> arguments) async {
       abbr: 'd',
       help: 'Do not run test, simple show the command executed',
       negatable: false);
-  ArgResults _argsResult = parser.parse(arguments);
+  final _argsResult = parser.parse(arguments);
 
-  bool help = _argsResult['help'] as bool;
+  final help = _argsResult['help'] as bool;
   if (help) {
-    stdout.writeln("Update pub global activated package(s)");
+    stdout.writeln('Update pub global activated package(s)');
     stdout.writeln();
     stdout.writeln('Usage: ${currentScriptName} [<pkg1> <pkg2>...]');
     stdout.writeln();
-    stdout.writeln("By default all packages are updated");
+    stdout.writeln('By default all packages are updated');
     stdout.writeln();
-    stdout.writeln("Global options:");
+    stdout.writeln('Global options:');
     stdout.writeln(parser.usage);
     return;
   }
 
-  bool showVersion = _argsResult['version'] as bool;
+  final showVersion = _argsResult['version'] as bool;
   if (showVersion) {
     stdout.writeln('${currentScriptName} version ${version}');
     return;
   }
 
-  bool dryRun = _argsResult['dry-run'] as bool;
-  bool verbose = _argsResult['verbose'] as bool;
+  final dryRun = _argsResult['dry-run'] as bool;
+  final verbose = _argsResult['verbose'] as bool;
 
-  ProcessResult result =
-      await runCmd(PubCmd(['global', 'list']), verbose: verbose);
+  var result = await runCmd(PubCmd(['global', 'list']), verbose: verbose);
   var lines = LineSplitter.split(result.stdout.toString());
 
-  List<String> packages = _argsResult.rest;
+  final packages = _argsResult.rest;
 
-  for (String line in lines) {
-    GlobalPackage package = GlobalPackage.fromListLine(line);
+  for (final line in lines) {
+    final package = GlobalPackage.fromListLine(line);
     if (package == null) {
       stderr.writeln("Cannot parse package information '$line'");
     } else {
@@ -71,8 +70,11 @@ Future main(List<String> arguments) async {
         }
       }
 
-      List<String> _pubArguments = <String>['global', 'activate']
-        ..addAll(package.activateArgs);
+      final _pubArguments = <String>[
+        'global',
+        'activate',
+        ...package.activateArgs
+      ];
       ProcessCmd cmd = PubCmd(_pubArguments);
       if (dryRun) {
         stdout.writeln(cmd);
@@ -82,8 +84,8 @@ Future main(List<String> arguments) async {
       }
 
       lines = LineSplitter.split(result.stdout.toString());
-      for (String line in lines) {
-        GlobalPackage updatedPackage =
+      for (final line in lines) {
+        final updatedPackage =
             GlobalPackage.fromActivatedLine(line, package.name);
         if (updatedPackage != null &&
             (verbose || (updatedPackage.version != package.version))) {
