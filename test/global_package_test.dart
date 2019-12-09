@@ -8,8 +8,7 @@ void main() {
     test('hosted', () {
       // pub global activate markdown
       final line = 'markdown 0.9.0';
-      var package =
-          GlobalPackage.fromListLine(line) as GlobalHostedPackage;
+      var package = GlobalPackage.fromListLine(line) as GlobalHostedPackage;
       expect(package.name, 'markdown');
       expect(package.version, Version(0, 9, 0));
       expect(package.activateArgs, ['markdown']);
@@ -28,8 +27,7 @@ void main() {
       // pub global activate --source git https://github.com/tekartik/pubglobalupdate.dart
       final line =
           "pubglobalupdate 0.1.0 from Git repository 'https://github.com/tekartik/pubglobalupdate.dart'";
-      final package =
-          GlobalPackage.fromListLine(line) as GlobalGitPackage;
+      final package = GlobalPackage.fromListLine(line) as GlobalGitPackage;
       expect(package.name, 'pubglobalupdate');
       expect(package.version, greaterThanOrEqualTo(Version(0, 1, 0)));
       expect(
@@ -45,8 +43,7 @@ void main() {
       // pub global activate --source path /media/ssd/devx/git/bitbucket.org/alextk/script.dart
       final line =
           "tekartik_script 0.1.0 at path '/media/ssd/devx/git/bitbucket.org/alextk/script.dart'";
-      final package =
-          GlobalPackage.fromListLine(line) as GlobalPathPackage;
+      final package = GlobalPackage.fromListLine(line) as GlobalPathPackage;
       expect(package.name, 'tekartik_script');
       expect(package.version, greaterThanOrEqualTo(Version(0, 1, 0)));
       expect(package.source,

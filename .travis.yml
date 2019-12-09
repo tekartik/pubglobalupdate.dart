@@ -4,3 +4,6 @@ dart:
   - 2.5.0
   - dev
 script: dart tool/travis.dart
+matrix:
+  allow_failures:
+    - dart: dev
