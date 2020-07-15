@@ -3,6 +3,6 @@ library pubglobalupdate;
 
 import 'dart:async';
 
-import 'package:pubglobalupdate/src/pubglobalupdate.dart' as pubglobalupdate;
+import 'package:pubglobalupdate/pubglobalupdate.dart' as pubglobalupdate;
 
 Future main(List<String> arguments) => pubglobalupdate.main(arguments);

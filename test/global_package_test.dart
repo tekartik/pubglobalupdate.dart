@@ -1,3 +1,6 @@
+@TestOn('vm')
+library pubglobalupdate.test.global_package_test;
+
 import 'package:dev_test/test.dart';
 
 import 'package:pubglobalupdate/src/global_package.dart';

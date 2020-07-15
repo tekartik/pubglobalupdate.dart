@@ -9,6 +9,9 @@ dartanalyzer --fatal-warnings --fatal-infos .
 dartfmt -n --set-exit-if-changed .
 
 # Run tests
-pub run test -p vm
+pub run test -p vm,chrome
+
+# dartdoc
+dartdoc
 ''');
 }

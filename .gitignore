@@ -17,3 +17,6 @@ pubspec.lock
 
 # webstorm
 .idea/
+
+# Generated doc
+/doc/api/

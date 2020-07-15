@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.2
+## 0.4.2+1
 
 * Pedantic 1.9 support
 
