@@ -2,10 +2,15 @@ library pubglobalupdate.global_package;
 
 import 'package:pub_semver/pub_semver.dart';
 
+/// Global package definition.
 abstract class GlobalPackage {
+  /// Package name.
   String name;
+
+  /// Package version.
   Version version;
 
+  /// `pub global activate` arguments
   List<String> get activateArgs;
 
   ///
@@ -82,6 +87,7 @@ abstract class GlobalPackage {
     return package;
   }
 
+  /// Get global package from actived line.
   static GlobalPackage fromActivatedLine(String line, String packageName) {
     final activated = 'activated';
     if (line.toLowerCase().startsWith(activated)) {
@@ -105,8 +111,6 @@ abstract class GlobalPackage {
 
 /// pub.dartlang.org hosted package
 class GlobalHostedPackage extends GlobalPackage {
-  GlobalHostedPackage();
-
   @override
   List<String> get activateArgs => [name];
 }
@@ -128,10 +132,15 @@ String _extractSource(String source) {
   return source;
 }
 
+/// Global package from source (git, path).
 abstract class GlobalSourcePackage extends GlobalPackage {
   String _source;
+
+  /// Package source.
   String get source => _source;
   set source(String source) => _source = _extractSource(source);
+
+  /// Source type (git, path)
   String get sourceType;
 
   @override
@@ -141,11 +150,13 @@ abstract class GlobalSourcePackage extends GlobalPackage {
   String toString() => '${super.toString()} $sourceType $source';
 }
 
+/// Global package from git.
 class GlobalGitPackage extends GlobalSourcePackage {
   @override
   String get sourceType => 'git';
 }
 
+/// Global package from path.
 class GlobalPathPackage extends GlobalSourcePackage {
   @override
   String get sourceType => 'path';

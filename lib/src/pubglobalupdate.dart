@@ -1,4 +1,5 @@
 #!/usr/bin/env dart
+
 library pubglobalupdate;
 
 import 'dart:async';
@@ -6,14 +7,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:path/path.dart';
 import 'package:process_run/cmd_run.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:pubglobalupdate/src/global_package.dart';
 
+/// App version.
 Version version = Version(1, 0, 1);
-
-String get currentScriptName => basenameWithoutExtension(Platform.script.path);
 
 ///
 /// Recursively update (pull) git folders
@@ -35,7 +34,7 @@ Future main(List<String> arguments) async {
   if (help) {
     stdout.writeln('Update pub global activated package(s)');
     stdout.writeln();
-    stdout.writeln('Usage: ${currentScriptName} [<pkg1> <pkg2>...]');
+    stdout.writeln('Usage: pubglobalupdate [<pkg1> <pkg2>...]');
     stdout.writeln();
     stdout.writeln('By default all packages are updated');
     stdout.writeln();
@@ -46,7 +45,7 @@ Future main(List<String> arguments) async {
 
   final showVersion = _argsResult['version'] as bool;
   if (showVersion) {
-    stdout.writeln('${currentScriptName} version ${version}');
+    stdout.writeln('pubglobalupdate version ${version}');
     return;
   }
 
