@@ -1,5 +1,3 @@
-#!/usr/bin/env dart
-
 library pubglobalupdate;
 
 import 'dart:async';

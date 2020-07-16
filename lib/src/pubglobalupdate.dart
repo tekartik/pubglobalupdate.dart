@@ -1,5 +1,3 @@
-#!/usr/bin/env dart
-
 library pubglobalupdate;
 
 import 'dart:async';
@@ -14,9 +12,7 @@ import 'package:pubglobalupdate/src/global_package.dart';
 /// App version.
 Version version = Version(1, 0, 1);
 
-///
-/// Recursively update (pull) git folders
-///
+/// Update currently activated packages.
 Future main(List<String> arguments) async {
   //setupQuickLogging();
 
