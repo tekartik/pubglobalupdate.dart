@@ -1,5 +1,11 @@
 # Changelog
 
+# Changelog
+
+## 0.4.3
+
+* Dart 2.10 support without pub in the path
+
 ## 0.4.2+3
 
 * Pedantic 1.9 support
