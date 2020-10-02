@@ -1,17 +1,11 @@
 import 'package:process_run/shell.dart';
+import 'package:dev_test/package.dart';
 
 Future main() async {
+  await packageRunCi('.');
   var shell = Shell();
 
   await shell.run('''
-# Analyze code
-dartanalyzer --fatal-warnings --fatal-infos .
-# Formatting
-dartfmt -n --set-exit-if-changed .
-      
-# Run tests
-pub run test -p vm,chrome
-
 # dartdoc
 dartdoc
 ''');

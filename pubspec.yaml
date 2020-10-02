@@ -1,17 +1,17 @@
 name: pubglobalupdate
-version: 0.4.2+3
+version: 0.4.3
 description: Helper to update global activated packages, all at once or by package name
 homepage: https://github.com/tekartik/pubglobalupdate.dart
 environment:
-  sdk: '>=2.8.0 <3.0.0'
+  sdk: '>=2.10.0-0 <3.0.0'
 dependencies:
   args: '>=1.0.2 <3.0.0'
-  process_run: '>=0.8.1 <2.0.0'
+  process_run: '>=0.11.0+2 <2.0.0'
   pub_semver: '>=1.3.2 <3.0.0'
   path: '>=1.6.1 <3.0.0'
 dev_dependencies:
-  pedantic: '>=1.8.0'
-  dev_test: '>=0.12.0'
+  pedantic: '>=1.9.0'
+  dev_test: '>=0.13.3+10'
   test: any
   io:
   yaml:

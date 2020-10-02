@@ -1,14 +1,12 @@
 @TestOn('vm')
 library pubglobalupdate.test.activate_package_test;
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dev_test/test.dart';
 import 'package:path/path.dart';
-import 'package:process_run/cmd_run.dart';
-import 'package:process_run/dartbin.dart';
-import 'package:process_run/process_run.dart';
+import 'package:process_run/shell.dart';
+import 'package:process_run/shell_run.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:pubglobalupdate/src/global_package.dart';
 
@@ -33,11 +31,11 @@ GlobalPackage fromUpdatedLine(String line, String packageName) {
 void main() {
   group('activate_package', () {
     test('path', () async {
-      ProcessResult result;
+      List<ProcessResult> results;
       final packageName = 'tekartik_pubglobalupdate_test_package';
       void _findActivatedPackage() {
         GlobalPathPackage foundPackage;
-        for (final line in LineSplitter.split(result.stdout.toString())) {
+        for (final line in results.outLines) {
           final package = GlobalPackage.fromActivatedLine(line, packageName)
               as GlobalPathPackage;
           if (package != null) {
@@ -49,30 +47,24 @@ void main() {
         expect(foundPackage.source, endsWith(join('data', 'test_package')));
       }
 
-      var cmd = PubCmd([
-        'global',
-        'activate',
-        '-s',
-        'path',
-        join(testScriptDirPath, 'data', 'test_package'),
-        '--overwrite'
-      ]);
-      result = await runCmd(cmd);
+      var cmd =
+          'dart pub global activate -s path ${shellArgument(join(testScriptDirPath, 'data', 'test_package'))} --overwrite';
+      results = await run(cmd);
       _findActivatedPackage();
 
-      result =
-          await run(dartExecutable, [pubglobalupdateScript, '-v', packageName]);
+      results = await run(
+          'dart run ${shellArgument(pubglobalupdateScript)} -v $packageName');
       _findActivatedPackage();
     });
 
     test('git', () async {
-      ProcessResult result;
+      List<ProcessResult> results;
       final packageName = 'process_run';
       final source = 'https://github.com/tekartik/process_run.dart';
       void _findActivatedPackage() {
         GlobalGitPackage foundPackage;
         // print(result.stdout);
-        for (final line in LineSplitter.split(result.stdout.toString())) {
+        for (final line in results.outLines) {
           final package = GlobalPackage.fromListLine(line) as GlobalGitPackage;
           if (package != null) {
             foundPackage = package;
@@ -83,23 +75,23 @@ void main() {
         expect(foundPackage.source, source);
       }
 
-      result = await runCmd(
-          PubCmd(['global', 'activate', '-s', 'git', source, '--overwrite']));
-      result = await runCmd(PubCmd(['global', 'list']));
+      await run(
+          'dart pub global activate -s git ${shellArgument(source)} --overwrite');
+      results = await run('dart pub global list');
       _findActivatedPackage();
 
-      result =
-          await run(dartExecutable, [pubglobalupdateScript, '-v', packageName]);
+      results = await run(
+          'dart run ${shellArgument(pubglobalupdateScript)} -v $packageName');
       _findActivatedPackage();
     }, skip: 'process_run is no longer valid on dart1');
 
     test('hosted', () async {
-      ProcessResult result;
+      List<ProcessResult> results;
       final packageName = 'stagehand';
       void _findActivatedPackage() {
         GlobalHostedPackage foundPackage;
         //print(result);
-        for (final line in LineSplitter.split(result.stdout.toString())) {
+        for (final line in results.outLines) {
           final package = GlobalPackage.fromActivatedLine(line, packageName)
               as GlobalHostedPackage;
           if (package != null) {
@@ -110,13 +102,12 @@ void main() {
         expect(foundPackage.version, greaterThanOrEqualTo(Version(0, 1, 0)));
       }
 
-      result = await runCmd(
-          PubCmd(['global', 'activate', '--overwrite', packageName]));
+      results = await run('dart pub global activate --overwrite $packageName');
 
       _findActivatedPackage();
 
-      result =
-          await run(dartExecutable, [pubglobalupdateScript, '-v', packageName]);
+      results = await run(
+          'dart run ${shellArgument(pubglobalupdateScript)} -v $packageName');
       _findActivatedPackage();
     });
   });
