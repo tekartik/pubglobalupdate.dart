@@ -75,7 +75,7 @@ Future main(List<String> arguments) async {
         lines = result.outLines;
         for (final line in lines) {
           final updatedPackage =
-              GlobalPackage.fromActivatedLine(line, package.name);
+              GlobalPackage.fromActivatedLine(line, package.name!);
           if (updatedPackage != null &&
               (verbose || (updatedPackage.version != package.version))) {
             stdout.writeln('updated: ${updatedPackage}');

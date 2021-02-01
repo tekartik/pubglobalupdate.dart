@@ -17,7 +17,7 @@ void main() {
       expect(package.activateArgs, ['markdown']);
 
       final activatedLine = 'Activated markdown 0.10.0.';
-      package = GlobalPackage.fromActivatedLine(activatedLine, package.name)
+      package = GlobalPackage.fromActivatedLine(activatedLine, package.name!)
           as GlobalHostedPackage;
       expect(package.name, 'markdown');
       expect(package.version, Version(0, 10, 0));

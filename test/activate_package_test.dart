@@ -15,7 +15,7 @@ String get testScriptDirPath => 'test';
 String get pubglobalupdateScript =>
     join(dirname(testScriptDirPath), 'bin', 'pubglobalupdate.dart');
 
-GlobalPackage fromUpdatedLine(String line, String packageName) {
+GlobalPackage? fromUpdatedLine(String line, String packageName) {
   final updated = 'updated: ';
   if (line.toLowerCase().startsWith(updated)) {
     final start = line.indexOf(packageName, updated.length);
@@ -31,13 +31,13 @@ GlobalPackage fromUpdatedLine(String line, String packageName) {
 void main() {
   group('activate_package', () {
     test('path', () async {
-      List<ProcessResult> results;
+      late List<ProcessResult> results;
       final packageName = 'tekartik_pubglobalupdate_test_package';
       void _findActivatedPackage() {
-        GlobalPathPackage foundPackage;
+        late GlobalPathPackage foundPackage;
         for (final line in results.outLines) {
           final package = GlobalPackage.fromActivatedLine(line, packageName)
-              as GlobalPathPackage;
+              as GlobalPathPackage?;
           if (package != null) {
             foundPackage = package;
           }
@@ -58,14 +58,14 @@ void main() {
     });
 
     test('git', () async {
-      List<ProcessResult> results;
+      late List<ProcessResult> results;
       final packageName = 'process_run';
       final source = 'https://github.com/tekartik/process_run.dart';
       void _findActivatedPackage() {
-        GlobalGitPackage foundPackage;
+        late GlobalGitPackage foundPackage;
         // print(result.stdout);
         for (final line in results.outLines) {
-          final package = GlobalPackage.fromListLine(line) as GlobalGitPackage;
+          final package = GlobalPackage.fromListLine(line) as GlobalGitPackage?;
           if (package != null) {
             foundPackage = package;
           }
@@ -86,14 +86,14 @@ void main() {
     }, skip: 'process_run is no longer valid on dart1');
 
     test('hosted', () async {
-      List<ProcessResult> results;
+      late List<ProcessResult> results;
       final packageName = 'stagehand';
       void _findActivatedPackage() {
-        GlobalHostedPackage foundPackage;
+        late GlobalHostedPackage foundPackage;
         //print(result);
         for (final line in results.outLines) {
           final package = GlobalPackage.fromActivatedLine(line, packageName)
-              as GlobalHostedPackage;
+              as GlobalHostedPackage?;
           if (package != null) {
             foundPackage = package;
           }

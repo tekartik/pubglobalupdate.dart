@@ -5,10 +5,10 @@ import 'package:pub_semver/pub_semver.dart';
 /// Global package definition.
 abstract class GlobalPackage {
   /// Package name.
-  String name;
+  String? name;
 
   /// Package version.
-  Version version;
+  Version? version;
 
   /// `pub global activate` arguments
   List<String> get activateArgs;
@@ -16,11 +16,11 @@ abstract class GlobalPackage {
   ///
   /// return null if it cannot be parsed
   ///
-  static GlobalPackage fromListLine(String line) {
+  static GlobalPackage? fromListLine(String line) {
     // split the line by spaces to get the arguments
     var parts = line.split(' ');
 
-    GlobalPackage package;
+    GlobalPackage? package;
     String name;
     Version version;
     // pub.dartlang.org hosted package
@@ -88,7 +88,7 @@ abstract class GlobalPackage {
   }
 
   /// Get global package from actived line.
-  static GlobalPackage fromActivatedLine(String line, String packageName) {
+  static GlobalPackage? fromActivatedLine(String line, String packageName) {
     final activated = 'activated';
     if (line.toLowerCase().startsWith(activated)) {
       final start = line.indexOf(packageName, activated.length);
@@ -112,7 +112,7 @@ abstract class GlobalPackage {
 /// pub.dartlang.org hosted package
 class GlobalHostedPackage extends GlobalPackage {
   @override
-  List<String> get activateArgs => [name];
+  List<String> get activateArgs => [name!];
 }
 
 String _insetString(String source, [int offset = 1]) {
@@ -134,7 +134,7 @@ String _extractSource(String source) {
 
 /// Global package from source (git, path).
 abstract class GlobalSourcePackage extends GlobalPackage {
-  String _source;
+  late String _source;
 
   /// Package source.
   String get source => _source;
