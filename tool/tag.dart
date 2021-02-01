@@ -7,8 +7,8 @@ import 'package:pub_semver/pub_semver.dart';
 Future main() async {
   var shell = Shell();
   var version = Version.parse(
-      (loadYaml(await File('pubspec.yaml').readAsString()) as Map)['version']
-          ?.toString());
+      (loadYaml(await File('pubspec.yaml').readAsString()) as Map)['version']!
+          .toString());
   print('Version $version');
   print('Tap anything or CTRL-C: $version');
 
