@@ -1,6 +1,8 @@
 # Changelog
 
-# Changelog
+## 0.5.0
+
+* nnbd support
 
 ## 0.4.3
 
