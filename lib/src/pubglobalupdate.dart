@@ -40,7 +40,7 @@ Future main(List<String> arguments) async {
 
   final showVersion = _argsResult['version'] as bool;
   if (showVersion) {
-    stdout.writeln('pubglobalupdate version ${version}');
+    stdout.writeln('pubglobalupdate version $version');
     return;
   }
 
@@ -69,16 +69,16 @@ Future main(List<String> arguments) async {
       if (dryRun) {
         stdout.writeln(cmd);
       } else {
-        stdout.writeln('updating: ${package}');
+        stdout.writeln('updating: $package');
         result = await run(cmd, verbose: verbose);
 
         lines = result.outLines;
         for (final line in lines) {
           final updatedPackage =
-              GlobalPackage.fromActivatedLine(line, package.name);
+              GlobalPackage.fromActivatedLine(line, package.name!);
           if (updatedPackage != null &&
               (verbose || (updatedPackage.version != package.version))) {
-            stdout.writeln('updated: ${updatedPackage}');
+            stdout.writeln('updated: $updatedPackage');
           }
         }
       }
