@@ -7,8 +7,11 @@ to their latest version
 
 ## Activate
 
+Choose one of the following two commands:
+
 ````
-pub global activate pubglobalupdate
+$ dart pub global activate pubglobalupdate
+$ flutter pub global activate pubglobalupdate
 ````
 
 ## Usage
