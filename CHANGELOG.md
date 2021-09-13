@@ -1,4 +1,6 @@
-# Changelog
+## 0.5.1
+
+* dart 2.14 lints
 
 ## 0.5.0
 
