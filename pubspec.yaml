@@ -1,10 +1,10 @@
 name: pubglobalupdate
-version: 0.5.0
+version: 0.5.1
 description: Helper to update global activated packages, all at once or by package name
 homepage: https://github.com/tekartik/pubglobalupdate.dart
 
 environment:
-  sdk: '>=2.12.0-0 <3.0.0'
+  sdk: '>=2.14.0 <3.0.0'
 
 dependencies:
   args: '>=2.0.0 <4.0.0'
