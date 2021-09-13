@@ -1,5 +1,4 @@
 import 'package:dev_test/test.dart';
-
 import 'package:pubglobalupdate/src/utils.dart';
 
 void main() {
@@ -16,7 +15,7 @@ void main() {
       expect(extractSource("'src'"), 'src');
       expect(extractSource('"src"'), 'src');
       expect(extractSource('"\'src\'"'), 'src');
-      expect(extractSource('\'src\"'), '\'src"');
+      expect(extractSource('\'src"'), '\'src"');
     });
   });
 }
