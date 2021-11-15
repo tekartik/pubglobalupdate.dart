@@ -41,7 +41,7 @@ $ pubglobalupdate stagehand
 
 * before commit, run all unit tests
 * to activate from your local drive: `pub global activate -s path .`
-* to activate from git repository: `pub global activate -s git git://github.com/tekartik/pubglobalupdate.dart`
+* to activate from git repository: `pub global activate -s git https://github.com/tekartik/pubglobalupdate.dart`
 
 ### Dependencies
 
