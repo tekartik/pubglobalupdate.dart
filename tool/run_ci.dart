@@ -11,8 +11,8 @@ Future main() async {
     var shell = Shell();
 
     await shell.run('''
-# dartdoc
-dartdoc
+# dart doc
+dart doc .
 ''');
   }
 }
