@@ -12,7 +12,7 @@ Future main() async {
 
     await shell.run('''
 # dartdoc
-dartdoc
+dart doc .
 ''');
   }
 }
