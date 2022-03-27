@@ -23,9 +23,9 @@ Future main(List<String> arguments) async {
       abbr: 'd',
       help: 'Do not run test, simple show the command executed',
       negatable: false);
-  final _argsResult = parser.parse(arguments);
+  final argResults = parser.parse(arguments);
 
-  final help = _argsResult['help'] as bool;
+  final help = argResults['help'] as bool;
   if (help) {
     stdout.writeln('Update pub global activated package(s)');
     stdout.writeln();
@@ -38,19 +38,19 @@ Future main(List<String> arguments) async {
     return;
   }
 
-  final showVersion = _argsResult['version'] as bool;
+  final showVersion = argResults['version'] as bool;
   if (showVersion) {
     stdout.writeln('pubglobalupdate version $version');
     return;
   }
 
-  final dryRun = _argsResult['dry-run'] as bool;
-  final verbose = _argsResult['verbose'] as bool;
+  final dryRun = argResults['dry-run'] as bool;
+  final verbose = argResults['verbose'] as bool;
 
   var result = await run('dart pub global list', verbose: verbose);
   var lines = result.outLines;
 
-  final packages = _argsResult.rest;
+  final packages = argResults.rest;
 
   for (final line in lines) {
     final package = GlobalPackage.fromListLine(line);
