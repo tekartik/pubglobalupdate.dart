@@ -50,12 +50,12 @@ abstract class GlobalPackage {
       //
       // tekartik_io_tools 0.7.1 from Git repository 'https://github.com/alextekartik/tekartik_io_tools.dart'
       // since 'from Git repository' might change, handle the 'git' word in the 2 words preceeding the source (last)
-      bool _isPartGit(int index) {
+      bool isPartGit(int index) {
         return parts[index].toLowerCase() == 'git';
       }
 
       // look for git in the 2 arguments preceding the source
-      if (_isPartGit(parts.length - 2) || _isPartGit(parts.length - 3)) {
+      if (isPartGit(parts.length - 2) || isPartGit(parts.length - 3)) {
         package = GlobalGitPackage();
       }
 
@@ -65,11 +65,11 @@ abstract class GlobalPackage {
         //
         // tekartik_io_tools 0.7.1 at path '/media/ssd/devx/git/github.com/alextekartik/tekartik_io_tools.dart'
         // since 'at path' might change, handle the 'path' word  in the 2 words preceeding the source (last)
-        bool _isPartPath(int index) {
+        bool isPartPath(int index) {
           return parts[index].toLowerCase() == 'path';
         }
 
-        if (_isPartPath(parts.length - 2) || _isPartPath(parts.length - 3)) {
+        if (isPartPath(parts.length - 2) || isPartPath(parts.length - 3)) {
           package = GlobalPathPackage();
         }
       }

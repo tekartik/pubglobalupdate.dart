@@ -33,7 +33,7 @@ void main() {
     test('path', () async {
       late List<ProcessResult> results;
       final packageName = 'tekartik_pubglobalupdate_test_package';
-      void _findActivatedPackage() {
+      void findActivatedPackage() {
         late GlobalPathPackage foundPackage;
         for (final line in results.outLines) {
           final package = GlobalPackage.fromActivatedLine(line, packageName)
@@ -50,18 +50,18 @@ void main() {
       var cmd =
           'dart pub global activate -s path ${shellArgument(join(testScriptDirPath, 'data', 'test_package'))} --overwrite';
       results = await run(cmd);
-      _findActivatedPackage();
+      findActivatedPackage();
 
       results = await run(
           'dart run ${shellArgument(pubglobalupdateScript)} -v $packageName');
-      _findActivatedPackage();
+      findActivatedPackage();
     });
 
     test('git', () async {
       late List<ProcessResult> results;
       final packageName = 'process_run';
       final source = 'https://github.com/tekartik/process_run.dart';
-      void _findActivatedPackage() {
+      void findActivatedPackage() {
         late GlobalGitPackage foundPackage;
         // print(result.stdout);
         for (final line in results.outLines) {
@@ -78,17 +78,17 @@ void main() {
       await run(
           'dart pub global activate -s git ${shellArgument(source)} --overwrite');
       results = await run('dart pub global list');
-      _findActivatedPackage();
+      findActivatedPackage();
 
       results = await run(
           'dart run ${shellArgument(pubglobalupdateScript)} -v $packageName');
-      _findActivatedPackage();
+      findActivatedPackage();
     }, skip: 'process_run is no longer valid on dart1');
 
     test('hosted', () async {
       late List<ProcessResult> results;
       final packageName = 'stagehand';
-      void _findActivatedPackage() {
+      void findActivatedPackage() {
         late GlobalHostedPackage foundPackage;
         //print(result);
         for (final line in results.outLines) {
@@ -104,11 +104,11 @@ void main() {
 
       results = await run('dart pub global activate --overwrite $packageName');
 
-      _findActivatedPackage();
+      findActivatedPackage();
 
       results = await run(
           'dart run ${shellArgument(pubglobalupdateScript)} -v $packageName');
-      _findActivatedPackage();
+      findActivatedPackage();
     });
   });
 }
