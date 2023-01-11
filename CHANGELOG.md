@@ -1,3 +1,7 @@
+## 0.5.2
+
+* strict-cast and dart 2.18 support
+
 ## 0.5.1+1
 
 * dart 2.14 lints
