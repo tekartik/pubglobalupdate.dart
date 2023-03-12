@@ -37,14 +37,14 @@ $ pubglobalupdate
 Update one package
 
 ````
-$ pubglobalupdate stagehand
+$ pubglobalupdate dhttpd
 ````
 
 ## Dev
 
 * before commit, run all unit tests
-* to activate from your local drive: `pub global activate -s path .`
-* to activate from git repository: `pub global activate -s git https://github.com/tekartik/pubglobalupdate.dart`
+* to activate from your local drive: `dart pub global activate -s path .`
+* to activate from git repository: `dart pub global activate -s git https://github.com/tekartik/pubglobalupdate.dart`
 
 ### Dependencies
 
