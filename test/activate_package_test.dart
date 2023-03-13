@@ -87,7 +87,7 @@ void main() {
 
     test('hosted', () async {
       late List<ProcessResult> results;
-      final packageName = 'stagehand';
+      final packageName = 'dhttpd';
       void findActivatedPackage() {
         late GlobalHostedPackage foundPackage;
         //print(result);
