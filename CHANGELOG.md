@@ -1,4 +1,4 @@
-## 0.5.2
+## 0.5.2+1
 
 * strict-cast and dart 2.18 support
 
