@@ -1,3 +1,7 @@
+## 0.5.3
+
+* Dart 3 support
+
 ## 0.5.2+1
 
 * strict-cast and dart 2.18 support
