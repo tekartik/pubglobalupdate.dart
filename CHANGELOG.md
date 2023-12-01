@@ -1,3 +1,7 @@
+## 0.5.4
+
+* Allow saving a package config.
+
 ## 0.5.3
 
 * Dart 3 support
