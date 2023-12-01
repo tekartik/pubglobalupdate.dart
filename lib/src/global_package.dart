@@ -107,6 +107,21 @@ abstract class GlobalPackage {
 
   @override
   String toString() => '$name $version';
+
+  /// Copy with a difference config
+  GlobalPackage copyWith(
+      {List<String>? activateArgs, String? name, Version? version}) {
+    return _GlobalPackageWithActivateArgs(activateArgs ?? this.activateArgs)
+      ..name = name ?? this.name
+      ..version = version ?? this.version;
+  }
+}
+
+class _GlobalPackageWithActivateArgs extends GlobalPackage {
+  @override
+  final List<String> activateArgs;
+
+  _GlobalPackageWithActivateArgs(this.activateArgs);
 }
 
 /// pub.dartlang.org hosted package
@@ -152,8 +167,20 @@ abstract class GlobalSourcePackage extends GlobalPackage {
 
 /// Global package from git.
 class GlobalGitPackage extends GlobalSourcePackage {
+  /// Global package from git.
+  GlobalGitPackage({this.gitUrl, this.gitPath, this.gitRef});
+
   @override
   String get sourceType => 'git';
+
+  /// Git url
+  String? gitUrl;
+
+  /// Git path
+  String? gitPath;
+
+  /// Git ref
+  String? gitRef;
 }
 
 /// Global package from path.
