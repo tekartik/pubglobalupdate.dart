@@ -3,12 +3,12 @@ library pubglobalupdate.test.activate_package_test;
 
 import 'dart:io';
 
-import 'package:dev_test/test.dart';
 import 'package:path/path.dart';
 import 'package:process_run/shell.dart';
 import 'package:process_run/shell_run.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:pubglobalupdate/src/global_package.dart';
+import 'package:test/test.dart';
 
 String get testScriptDirPath => 'test';
 
