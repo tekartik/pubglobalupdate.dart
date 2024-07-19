@@ -1,6 +1,7 @@
-## 0.5.4
+## 0.5.4+1
 
 * Allow saving a package config.
+* Allow listing all packages configuration.
 
 ## 0.5.3
 

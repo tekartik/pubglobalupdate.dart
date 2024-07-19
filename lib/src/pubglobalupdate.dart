@@ -22,9 +22,11 @@ Future main(List<String> arguments) async {
   parser.addFlag('help', abbr: 'h', help: 'Usage help', negatable: false);
   parser.addFlag('version', help: 'Display version', negatable: false);
   parser.addFlag('verbose', abbr: 'v', help: 'Verbose', negatable: false);
-  parser.addOption('config-package', help: 'Enter config mode, no update done');
+  parser.addOption('config-package',
+      help: 'Configure package source (using git url path and ref)');
   parser.addFlag('config-read', help: 'Read package config');
   parser.addFlag('config-clear', help: 'Clear package config');
+  parser.addFlag('config-list', help: 'List all package configuration');
 
   parser.addOption('source',
       help: 'Config source', allowed: ['git', 'path', 'hosted']);
@@ -59,6 +61,18 @@ Future main(List<String> arguments) async {
   final dryRun = argResults['dry-run'] as bool;
   final verbose = argResults['verbose'] as bool;
 
+  var listConfig = argResults.flag('config-list');
+  if (listConfig) {
+    for (var package in await listConfiguredPackages()) {
+      stdout.writeln('$package:');
+      var config = await readConfig(package);
+      if (config != null) {
+        stdout.writeln(
+            const JsonEncoder.withIndent('  ').convert(config.toMap()));
+      }
+    }
+    return;
+  }
   var configPackage = argResults['config-package'] as String?;
   if (configPackage != null) {
     var read = argResults['config-read'] as bool;

@@ -104,6 +104,18 @@ Future<void> deleteConfig(String package) async {
   }
 }
 
+/// List all configured packages.
+Future<List<String>> listConfiguredPackages() async {
+  var list = await Directory(_configDir.path)
+      .list()
+      .where((entity) =>
+          FileSystemEntity.isFileSync(entity.path) &&
+          extension(entity.path) == '.yaml')
+      .map((entity) => basenameWithoutExtension(entity.path))
+      .toList();
+  return list;
+}
+
 /// Read the config
 Future<GlobalPackageConfig?> readConfig(String package) async {
   var configFile = _packageConfigFile(package);
