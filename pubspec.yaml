@@ -7,16 +7,15 @@ environment:
   sdk: '>=3.4.0 <4.0.0'
 
 dependencies:
-  args: '>=2.0.0 <4.0.0'
-  process_run: '>=0.12.0 <2.0.0'
-  pub_semver: '>=2.0.0 <4.0.0'
-  path: '>=1.8.0 <3.0.0'
-
-dev_dependencies:
-  lints: '>=1.0.1'
-  dev_build: '>=0.15.0'
-  test: '>=1.16.2'
+  args: '>=2.5.0 <4.0.0'
+  process_run: '>=1.0.0+1 <2.0.0'
+  pub_semver: '>=2.1.4 <4.0.0'
+  path: '>=1.9.0 <3.0.0'
   yaml: '>=3.0.0'
+dev_dependencies:
+  lints: '>=4.0.0'
+  dev_build: '>=1.0.0+7'
+  test: '>=1.25.8'
 
 executables:
   pubglobalupdate:
