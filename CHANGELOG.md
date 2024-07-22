@@ -1,4 +1,4 @@
-## 0.5.4+1
+## 0.5.4+2
 
 * Allow saving a package config.
 * Allow listing all packages configuration.
