@@ -1,3 +1,8 @@
+## 1.0.0
+
+* Make it 1.0.0
+* Requires dart 3.5
+
 ## 0.5.4+2
 
 * Allow saving a package config.

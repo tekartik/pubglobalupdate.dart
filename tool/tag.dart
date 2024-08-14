@@ -9,8 +9,8 @@ Future main() async {
   var version = Version.parse(
       (loadYaml(await File('pubspec.yaml').readAsString()) as Map)['version']!
           .toString());
-  print('Version $version');
-  print('Tap anything or CTRL-C: $version');
+  stdout.writeln('Version $version');
+  stdout.writeln('Tap anything or CTRL-C: $version');
 
   await sharedStdIn.first;
   await shell.run('''
