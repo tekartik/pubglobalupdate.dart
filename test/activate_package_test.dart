@@ -1,5 +1,5 @@
 @TestOn('vm')
-library pubglobalupdate.test.activate_package_test;
+library;
 
 import 'dart:io';
 

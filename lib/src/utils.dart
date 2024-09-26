@@ -1,4 +1,4 @@
-library pubglobalupdate.src.utils;
+library;
 
 ///
 /// remove last and first char

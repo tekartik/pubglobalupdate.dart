@@ -1,4 +1,4 @@
-library pubglobalupdate;
+library;
 
 import 'dart:async';
 import 'dart:convert';

@@ -1,4 +1,4 @@
-library pubglobalupdate.global_package;
+library;
 
 import 'package:pub_semver/pub_semver.dart';
 
