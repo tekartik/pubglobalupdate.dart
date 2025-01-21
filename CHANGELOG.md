@@ -1,4 +1,4 @@
-## 1.0.0
+## 1.0.0+1
 
 * Make it 1.0.0
 * Requires dart 3.5
