@@ -1,5 +1,5 @@
 name: pubglobalupdate
-version: 1.0.0+1
+version: 1.0.1
 description: Helper to update global activated packages, all at once or by package name
 homepage: https://github.com/tekartik/pubglobalupdate.dart
 
