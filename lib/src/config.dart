@@ -23,13 +23,14 @@ class GlobalPackageConfig {
   final String? gitUrl;
 
   /// Global config
-  GlobalPackageConfig(
-      {this.source,
-      this.path,
-      this.package,
-      this.gitPath,
-      this.gitRef,
-      this.gitUrl});
+  GlobalPackageConfig({
+    this.source,
+    this.path,
+    this.package,
+    this.gitPath,
+    this.gitRef,
+    this.gitUrl,
+  });
 
   /// json encodable map.
   Map<String, Object?> toMap() {
@@ -79,8 +80,12 @@ class GlobalPackageConfig {
 }
 
 Directory get _configDir {
-  var configDir =
-      join(userAppDataPath, 'tekartik', 'pubglobalupdate', 'config');
+  var configDir = join(
+    userAppDataPath,
+    'tekartik',
+    'pubglobalupdate',
+    'config',
+  );
   return Directory(configDir);
 }
 
@@ -106,13 +111,16 @@ Future<void> deleteConfig(String package) async {
 
 /// List all configured packages.
 Future<List<String>> listConfiguredPackages() async {
-  var list = await Directory(_configDir.path)
-      .list()
-      .where((entity) =>
-          FileSystemEntity.isFileSync(entity.path) &&
-          extension(entity.path) == '.yaml')
-      .map((entity) => basenameWithoutExtension(entity.path))
-      .toList();
+  var list =
+      await Directory(_configDir.path)
+          .list()
+          .where(
+            (entity) =>
+                FileSystemEntity.isFileSync(entity.path) &&
+                extension(entity.path) == '.yaml',
+          )
+          .map((entity) => basenameWithoutExtension(entity.path))
+          .toList();
   return list;
 }
 

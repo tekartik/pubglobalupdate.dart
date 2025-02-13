@@ -22,21 +22,28 @@ Future main(List<String> arguments) async {
   parser.addFlag('help', abbr: 'h', help: 'Usage help', negatable: false);
   parser.addFlag('version', help: 'Display version', negatable: false);
   parser.addFlag('verbose', abbr: 'v', help: 'Verbose', negatable: false);
-  parser.addOption('config-package',
-      help: 'Configure package source (using git url path and ref)');
+  parser.addOption(
+    'config-package',
+    help: 'Configure package source (using git url path and ref)',
+  );
   parser.addFlag('config-read', help: 'Read package config');
   parser.addFlag('config-clear', help: 'Clear package config');
   parser.addFlag('config-list', help: 'List all package configuration');
 
-  parser.addOption('source',
-      help: 'Config source', allowed: ['git', 'path', 'hosted']);
+  parser.addOption(
+    'source',
+    help: 'Config source',
+    allowed: ['git', 'path', 'hosted'],
+  );
   parser.addOption('git-url', help: 'Git url');
   parser.addOption('git-path', help: 'Git path');
   parser.addOption('git-ref', help: 'Git ref');
-  parser.addFlag('dry-run',
-      abbr: 'd',
-      help: 'Do not run test, simple show the command executed',
-      negatable: false);
+  parser.addFlag(
+    'dry-run',
+    abbr: 'd',
+    help: 'Do not run test, simple show the command executed',
+    negatable: false,
+  );
   final argResults = parser.parse(arguments);
 
   final help = argResults['help'] as bool;
@@ -68,7 +75,8 @@ Future main(List<String> arguments) async {
       var config = await readConfig(package);
       if (config != null) {
         stdout.writeln(
-            const JsonEncoder.withIndent('  ').convert(config.toMap()));
+          const JsonEncoder.withIndent('  ').convert(config.toMap()),
+        );
       }
     }
     return;
@@ -80,7 +88,8 @@ Future main(List<String> arguments) async {
       var config = await readConfig(configPackage);
       if (config != null) {
         stdout.writeln(
-            const JsonEncoder.withIndent('  ').convert(config.toMap()));
+          const JsonEncoder.withIndent('  ').convert(config.toMap()),
+        );
       }
       return;
     }
@@ -94,11 +103,12 @@ Future main(List<String> arguments) async {
     var gitRef = argResults['git-ref'] as String?;
     var source = argResults['source'] as String?;
     var config = GlobalPackageConfig(
-        package: configPackage,
-        source: source,
-        gitUrl: gitUrl,
-        gitPath: gitPath,
-        gitRef: gitRef);
+      package: configPackage,
+      source: source,
+      gitUrl: gitUrl,
+      gitPath: gitPath,
+      gitRef: gitRef,
+    );
     await writeConfig(configPackage, config);
 
     return;
@@ -138,8 +148,10 @@ Future main(List<String> arguments) async {
 
         lines = result.outLines;
         for (final line in lines) {
-          final updatedPackage =
-              GlobalPackage.fromActivatedLine(line, package.name!);
+          final updatedPackage = GlobalPackage.fromActivatedLine(
+            line,
+            package.name!,
+          );
           if (updatedPackage != null &&
               (verbose || (updatedPackage.version != package.version))) {
             stdout.writeln('updated: $updatedPackage');

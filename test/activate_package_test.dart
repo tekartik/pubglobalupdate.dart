@@ -36,8 +36,9 @@ void main() {
       void findActivatedPackage() {
         late GlobalPathPackage foundPackage;
         for (final line in results.outLines) {
-          final package = GlobalPackage.fromActivatedLine(line, packageName)
-              as GlobalPathPackage?;
+          final package =
+              GlobalPackage.fromActivatedLine(line, packageName)
+                  as GlobalPathPackage?;
           if (package != null) {
             foundPackage = package;
           }
@@ -53,7 +54,8 @@ void main() {
       findActivatedPackage();
 
       results = await run(
-          'dart run ${shellArgument(pubglobalupdateScript)} -v $packageName');
+        'dart run ${shellArgument(pubglobalupdateScript)} -v $packageName',
+      );
       findActivatedPackage();
     });
 
@@ -76,12 +78,14 @@ void main() {
       }
 
       await run(
-          'dart pub global activate -s git ${shellArgument(source)} --overwrite');
+        'dart pub global activate -s git ${shellArgument(source)} --overwrite',
+      );
       results = await run('dart pub global list');
       findActivatedPackage();
 
       results = await run(
-          'dart run ${shellArgument(pubglobalupdateScript)} -v $packageName');
+        'dart run ${shellArgument(pubglobalupdateScript)} -v $packageName',
+      );
       findActivatedPackage();
     }, skip: 'process_run is no longer valid on dart1');
 
@@ -92,8 +96,9 @@ void main() {
         late GlobalHostedPackage foundPackage;
         //print(result);
         for (final line in results.outLines) {
-          final package = GlobalPackage.fromActivatedLine(line, packageName)
-              as GlobalHostedPackage?;
+          final package =
+              GlobalPackage.fromActivatedLine(line, packageName)
+                  as GlobalHostedPackage?;
           if (package != null) {
             foundPackage = package;
           }
@@ -107,7 +112,8 @@ void main() {
       findActivatedPackage();
 
       results = await run(
-          'dart run ${shellArgument(pubglobalupdateScript)} -v $packageName');
+        'dart run ${shellArgument(pubglobalupdateScript)} -v $packageName',
+      );
       findActivatedPackage();
     });
   });

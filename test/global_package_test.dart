@@ -16,8 +16,9 @@ void main() {
       expect(package.activateArgs, ['markdown']);
 
       final activatedLine = 'Activated markdown 0.10.0.';
-      package = GlobalPackage.fromActivatedLine(activatedLine, package.name!)
-          as GlobalHostedPackage;
+      package =
+          GlobalPackage.fromActivatedLine(activatedLine, package.name!)
+              as GlobalHostedPackage;
       expect(package.name, 'markdown');
       expect(package.version, Version(0, 10, 0));
       expect(package.activateArgs, ['markdown']);
@@ -33,11 +34,13 @@ void main() {
       expect(package.name, 'pubglobalupdate');
       expect(package.version, greaterThanOrEqualTo(Version(0, 1, 0)));
       expect(
-          package.source, 'https://github.com/tekartik/pubglobalupdate.dart');
+        package.source,
+        'https://github.com/tekartik/pubglobalupdate.dart',
+      );
       expect(package.activateArgs, [
         '--source',
         'git',
-        'https://github.com/tekartik/pubglobalupdate.dart'
+        'https://github.com/tekartik/pubglobalupdate.dart',
       ]);
     });
 
@@ -48,12 +51,14 @@ void main() {
       final package = GlobalPackage.fromListLine(line) as GlobalPathPackage;
       expect(package.name, 'tekartik_script');
       expect(package.version, greaterThanOrEqualTo(Version(0, 1, 0)));
-      expect(package.source,
-          '/media/ssd/devx/git/bitbucket.org/alextk/script.dart');
+      expect(
+        package.source,
+        '/media/ssd/devx/git/bitbucket.org/alextk/script.dart',
+      );
       expect(package.activateArgs, [
         '--source',
         'path',
-        '/media/ssd/devx/git/bitbucket.org/alextk/script.dart'
+        '/media/ssd/devx/git/bitbucket.org/alextk/script.dart',
       ]);
     });
   });

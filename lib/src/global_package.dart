@@ -109,8 +109,11 @@ abstract class GlobalPackage {
   String toString() => '$name $version';
 
   /// Copy with a difference config
-  GlobalPackage copyWith(
-      {List<String>? activateArgs, String? name, Version? version}) {
+  GlobalPackage copyWith({
+    List<String>? activateArgs,
+    String? name,
+    Version? version,
+  }) {
     return _GlobalPackageWithActivateArgs(activateArgs ?? this.activateArgs)
       ..name = name ?? this.name
       ..version = version ?? this.version;
