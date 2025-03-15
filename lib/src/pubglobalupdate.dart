@@ -26,9 +26,21 @@ Future main(List<String> arguments) async {
     'config-package',
     help: 'Configure package source (using git url path and ref)',
   );
-  parser.addFlag('config-read', help: 'Read package config');
-  parser.addFlag('config-clear', help: 'Clear package config');
-  parser.addFlag('config-list', help: 'List all package configuration');
+  parser.addFlag(
+    'config-read',
+    help: 'Read package config (config-package options must be set)',
+    negatable: false,
+  );
+  parser.addFlag(
+    'config-clear',
+    help: 'Clear package config (config-package options must be set)',
+    negatable: false,
+  );
+  parser.addFlag(
+    'config-list',
+    help: 'List all package configuration',
+    negatable: false,
+  );
 
   parser.addOption(
     'source',
@@ -83,7 +95,7 @@ Future main(List<String> arguments) async {
   }
   var configPackage = argResults['config-package'] as String?;
   if (configPackage != null) {
-    var read = argResults['config-read'] as bool;
+    var read = argResults.flag('config-read');
     if (read) {
       var config = await readConfig(configPackage);
       if (config != null) {
@@ -93,7 +105,7 @@ Future main(List<String> arguments) async {
       }
       return;
     }
-    var clear = argResults['config-clear'] as bool;
+    var clear = argResults.flag('config-clear');
     if (clear) {
       await deleteConfig(configPackage);
       return;
@@ -112,6 +124,14 @@ Future main(List<String> arguments) async {
     await writeConfig(configPackage, config);
 
     return;
+  }
+  if (argResults.flag('config-read')) {
+    stderr.writeln('config-package must be set');
+    exit(1);
+  }
+  if (argResults.flag('config-clear')) {
+    stderr.writeln('config-package must be set');
+    exit(1);
   }
 
   var result = await run('dart pub global list', verbose: verbose);
