@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 import 'package:process_run/shell.dart';
 
@@ -79,7 +80,9 @@ class GlobalPackageConfig {
   }
 }
 
-Directory get _configDir {
+@internal
+/// Package config directory
+Directory get packagesConfigDir {
   var configDir = join(
     userAppDataPath,
     'tekartik',
@@ -90,19 +93,19 @@ Directory get _configDir {
 }
 
 File _packageConfigFile(String package) {
-  return File(join(_configDir.path, '$package.yaml'));
+  return File(join(packagesConfigDir.path, '$package.yaml'));
 }
 
 /// Write the config
 Future<void> writeConfig(String package, GlobalPackageConfig config) async {
-  await _configDir.create(recursive: true);
+  await packagesConfigDir.create(recursive: true);
   var configFile = _packageConfigFile(package);
   await configFile.writeAsString(jsonEncode(config.toMap()));
 }
 
 /// Delete the config
 Future<void> deleteConfig(String package) async {
-  await _configDir.create(recursive: true);
+  await packagesConfigDir.create(recursive: true);
   var configFile = _packageConfigFile(package);
   if (configFile.existsSync()) {
     await configFile.delete();
@@ -111,7 +114,7 @@ Future<void> deleteConfig(String package) async {
 
 /// List all configured packages.
 Future<List<String>> listConfiguredPackages() async {
-  var list = await Directory(_configDir.path)
+  var list = await Directory(packagesConfigDir.path)
       .list()
       .where(
         (entity) =>

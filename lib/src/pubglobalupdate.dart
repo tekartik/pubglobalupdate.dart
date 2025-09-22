@@ -7,12 +7,12 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:process_run/shell.dart';
 import 'package:process_run/shell_run.dart';
-import 'package:pub_semver/pub_semver.dart';
 import 'package:pubglobalupdate/src/config.dart';
 import 'package:pubglobalupdate/src/global_package.dart';
+import 'package:pubglobalupdate/src/version.dart';
 
 /// App version.
-Version version = Version(1, 0, 1);
+final version = packageVersion;
 
 /// Update currently activated packages.
 Future main(List<String> arguments) async {
