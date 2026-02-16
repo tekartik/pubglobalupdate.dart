@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:process_run/shell.dart';
 import 'package:process_run/shell_run.dart';
+import 'package:pub_semver/pub_semver.dart';
 import 'package:pubglobalupdate/src/config.dart';
 import 'package:pubglobalupdate/src/global_package.dart';
 import 'package:pubglobalupdate/src/version.dart';
@@ -41,7 +42,16 @@ Future main(List<String> arguments) async {
     help: 'List all package configuration',
     negatable: false,
   );
-
+  parser.addFlag(
+    'package-list',
+    help: 'List all packages configured',
+    negatable: false,
+  );
+  parser.addFlag(
+    'install',
+    help: 'Install package if not already activated',
+    negatable: false,
+  );
   parser.addOption(
     'source',
     help: 'Config source',
@@ -81,14 +91,19 @@ Future main(List<String> arguments) async {
   final verbose = argResults['verbose'] as bool;
 
   var listConfig = argResults.flag('config-list');
-  if (listConfig) {
+  var listPackages = argResults.flag('package-list');
+  if (listConfig || listPackages) {
     for (var package in await listConfiguredPackages()) {
-      stdout.writeln('$package:');
-      var config = await readConfig(package);
-      if (config != null) {
-        stdout.writeln(
-          const JsonEncoder.withIndent('  ').convert(config.toMap()),
-        );
+      if (listPackages) {
+        stdout.writeln(package);
+      } else {
+        stdout.writeln('$package:');
+        var config = await readConfig(package);
+        if (config != null) {
+          stdout.writeln(
+            const JsonEncoder.withIndent('  ').convert(config.toMap()),
+          );
+        }
       }
     }
     return;
@@ -136,9 +151,15 @@ Future main(List<String> arguments) async {
 
   var result = await run('dart pub global list', verbose: verbose);
   var lines = result.outLines;
-
+  final install = argResults.flag('install');
   final packages = argResults.rest;
 
+  if (install) {
+    for (var package in packages) {
+      await activatePackage(package);
+    }
+    return;
+  }
   for (final line in lines) {
     final package = GlobalPackage.fromListLine(line);
     if (package == null) {
@@ -152,31 +173,57 @@ Future main(List<String> arguments) async {
       }
 
       var packageName = package.name!;
-      var savedConfig = await readConfig(packageName);
-      String cmd;
-      if (savedConfig != null) {
-        cmd = 'dart pub global activate ${savedConfig.toActivateArgsString()}';
-      } else {
-        cmd =
-            'dart pub global activate ${package.activateArgs.map((e) => shellArgument(e)).join(' ')}';
-      }
-      if (dryRun) {
-        stdout.writeln(cmd);
-      } else {
-        stdout.writeln('updating: $package');
-        result = await run(cmd, verbose: verbose);
+      await activatePackage(
+        packageName,
+        dryRun: dryRun,
+        verbose: verbose,
+        existingPackage: package,
+      );
+    }
+  }
+}
 
-        lines = result.outLines;
-        for (final line in lines) {
-          final updatedPackage = GlobalPackage.fromActivatedLine(
-            line,
-            package.name!,
-          );
-          if (updatedPackage != null &&
-              (verbose || (updatedPackage.version != package.version))) {
-            stdout.writeln('updated: $updatedPackage');
-          }
-        }
+/// Activate package according its saved configuration if any
+Future<void> activatePackage(
+  String packageName, {
+
+  /// Set when updating
+  bool? dryRun,
+  bool? verbose,
+
+  /// Resolved from command line
+  GlobalPackage? existingPackage,
+}) async {
+  dryRun ??= false;
+  verbose ??= false;
+  var savedConfig = await readConfig(packageName);
+  var existingPackageVersion = existingPackage?.version;
+  String cmd;
+  if (savedConfig != null) {
+    cmd = 'dart pub global activate ${savedConfig.toActivateArgsString()}';
+  } else if (existingPackage != null) {
+    cmd =
+        'dart pub global activate ${existingPackage.activateArgs.map((e) => shellArgument(e)).join(' ')}';
+  } else {
+    cmd = 'dart pub global activate $packageName';
+  }
+  var installing = existingPackageVersion == null;
+  if (dryRun) {
+    stdout.writeln(cmd);
+  } else {
+    stdout.writeln('${installing ? 'installing' : 'updating'}: $packageName');
+    final result = await run(cmd, verbose: verbose);
+
+    final lines = result.outLines;
+    for (final line in lines) {
+      final updatedPackage = GlobalPackage.fromActivatedLine(line, packageName);
+      if (updatedPackage != null &&
+          (verbose ||
+              (updatedPackage.version !=
+                  (existingPackageVersion ?? Version(0, 0, 0))))) {
+        stdout.writeln(
+          '${installing ? 'installed' : 'updated'}: $updatedPackage',
+        );
       }
     }
   }
