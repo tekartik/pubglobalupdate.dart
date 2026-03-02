@@ -1,8 +1,6 @@
 @TestOn('vm')
 library;
 
-import 'dart:io';
-
 import 'package:path/path.dart';
 import 'package:process_run/shell.dart';
 import 'package:process_run/shell_run.dart';

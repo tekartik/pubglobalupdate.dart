@@ -20,3 +20,8 @@ pubspec.lock
 
 # Generated doc
 /doc/api/
+
+# Local files
+.*
+!.gitignore
+!.github/
