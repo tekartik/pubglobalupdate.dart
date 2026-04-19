@@ -9,9 +9,6 @@ jobs:
   test:
     name: Test on ${{ matrix.os }} / ${{ matrix.dart }}
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        working-directory: repo_support
     strategy:
       fail-fast: false
       matrix:
