@@ -5,11 +5,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:dev_build/package.dart';
 import 'package:process_run/shell.dart';
 import 'package:process_run/shell_run.dart';
-import 'package:pub_semver/pub_semver.dart';
 import 'package:pubglobalupdate/src/config.dart';
-import 'package:pubglobalupdate/src/global_package.dart';
+
 import 'package:pubglobalupdate/src/version.dart';
 
 /// App version.
@@ -60,6 +60,7 @@ Future main(List<String> arguments) async {
   parser.addOption('git-url', help: 'Git url');
   parser.addOption('git-path', help: 'Git path');
   parser.addOption('git-ref', help: 'Git ref');
+  parser.addOption('path', help: 'Path for path source');
   parser.addFlag(
     'dry-run',
     abbr: 'd',
@@ -125,12 +126,30 @@ Future main(List<String> arguments) async {
       await deleteConfig(configPackage);
       return;
     }
-    var gitUrl = argResults['git-url'] as String?;
-    var gitPath = argResults['git-path'] as String?;
-    var gitRef = argResults['git-ref'] as String?;
-    var source = argResults['source'] as String?;
-    var config = GlobalPackageConfig(
+    var gitUrl = argResults.option('git-url');
+    var gitPath = argResults.option('git-path');
+    var gitRef = argResults.option('git-ref');
+    var source = argResults.option('source');
+    var path = argResults.option('path');
+    if (source == 'git') {
+      if (gitUrl == null) {
+        stderr.writeln('git-url must be set');
+        exit(1);
+      }
+    } else if (source == 'path') {
+      if (path == null) {
+        stderr.writeln('path must be set');
+        exit(1);
+      }
+    } else if (source == 'hosted' || source == null) {
+      // hosted is default
+    } else {
+      stderr.writeln('Invalid source $source');
+      exit(1);
+    }
+    var config = PubGlobalPackageConfig(
       package: configPackage,
+      path: path,
       source: source,
       gitUrl: gitUrl,
       gitPath: gitPath,
@@ -161,7 +180,7 @@ Future main(List<String> arguments) async {
     return;
   }
   for (final line in lines) {
-    final package = GlobalPackage.fromListLine(line);
+    final package = PubGlobalPackage.fromListLine(line);
     if (package == null) {
       stderr.writeln("Cannot parse package information '$line'");
     } else {
@@ -172,7 +191,7 @@ Future main(List<String> arguments) async {
         }
       }
 
-      var packageName = package.name!;
+      var packageName = package.name;
       await activatePackage(
         packageName,
         dryRun: dryRun,
@@ -192,7 +211,7 @@ Future<void> activatePackage(
   bool? verbose,
 
   /// Resolved from command line
-  GlobalPackage? existingPackage,
+  PubGlobalPackage? existingPackage,
 }) async {
   dryRun ??= false;
   verbose ??= false;
@@ -216,7 +235,10 @@ Future<void> activatePackage(
 
     final lines = result.outLines;
     for (final line in lines) {
-      final updatedPackage = GlobalPackage.fromActivatedLine(line, packageName);
+      final updatedPackage = PubGlobalPackage.fromActivatedLine(
+        line,
+        packageName,
+      );
       if (updatedPackage != null &&
           (verbose ||
               (updatedPackage.version !=

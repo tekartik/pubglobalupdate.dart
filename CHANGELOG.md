@@ -1,4 +1,4 @@
-## 1.0.2+3
+## 1.0.2+4
 
 * Requires dart 3.11
 * Add `--install` flag to force updating a configured package not installed yet

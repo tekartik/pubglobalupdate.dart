@@ -1,11 +1,11 @@
 @TestOn('vm')
 library;
 
+import 'package:dev_build/package.dart';
 import 'package:path/path.dart';
 import 'package:process_run/shell.dart';
 import 'package:process_run/shell_run.dart';
-import 'package:pub_semver/pub_semver.dart';
-import 'package:pubglobalupdate/src/global_package.dart';
+
 import 'package:test/test.dart';
 
 String get testScriptDirPath => 'test';
@@ -13,14 +13,14 @@ String get testScriptDirPath => 'test';
 String get pubglobalupdateScript =>
     join(dirname(testScriptDirPath), 'bin', 'pubglobalupdate.dart');
 
-GlobalPackage? fromUpdatedLine(String line, String packageName) {
+PubGlobalPackage? fromUpdatedLine(String line, String packageName) {
   final updated = 'updated: ';
   if (line.toLowerCase().startsWith(updated)) {
     final start = line.indexOf(packageName, updated.length);
     if (start != -1) {
       line = line.substring(0, line.length - 1);
     }
-    final updatedPackage = GlobalPackage.fromListLine(line);
+    final updatedPackage = PubGlobalPackage.fromListLine(line);
     return updatedPackage;
   }
   return null;
@@ -32,11 +32,11 @@ void main() {
       late List<ProcessResult> results;
       final packageName = 'tekartik_pubglobalupdate_test_package';
       void findActivatedPackage() {
-        late GlobalPathPackage foundPackage;
+        late PubGlobalPathPackage foundPackage;
         for (final line in results.outLines) {
           final package =
-              GlobalPackage.fromActivatedLine(line, packageName)
-                  as GlobalPathPackage?;
+              PubGlobalPackage.fromActivatedLine(line, packageName)
+                  as PubGlobalPathPackage?;
           if (package != null) {
             foundPackage = package;
           }
@@ -62,10 +62,11 @@ void main() {
       final packageName = 'process_run';
       final source = 'https://github.com/tekartik/process_run.dart';
       void findActivatedPackage() {
-        late GlobalGitPackage foundPackage;
+        late PubGlobalGitPackage foundPackage;
         // print(result.stdout);
         for (final line in results.outLines) {
-          final package = GlobalPackage.fromListLine(line) as GlobalGitPackage?;
+          final package =
+              PubGlobalPackage.fromListLine(line) as PubGlobalGitPackage?;
           if (package != null) {
             foundPackage = package;
           }
@@ -91,12 +92,12 @@ void main() {
       late List<ProcessResult> results;
       final packageName = 'dhttpd';
       void findActivatedPackage() {
-        late GlobalHostedPackage foundPackage;
+        late PubGlobalHostedPackage foundPackage;
         //print(result);
         for (final line in results.outLines) {
           final package =
-              GlobalPackage.fromActivatedLine(line, packageName)
-                  as GlobalHostedPackage?;
+              PubGlobalPackage.fromActivatedLine(line, packageName)
+                  as PubGlobalHostedPackage?;
           if (package != null) {
             foundPackage = package;
           }

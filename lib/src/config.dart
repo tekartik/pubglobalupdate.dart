@@ -1,17 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dev_build/package.dart';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 import 'package:process_run/shell.dart';
 
 /// Global config.
-class GlobalPackageConfig {
-  /// Source (git/hosted/path)
+class PubGlobalPackageConfig {
+  /// Source (git/hosted/path), null means hosted
   final String? source;
 
-  /// For source = 'hosted'
-  final String? package; // for hosted
+  /// For all source
+  final String package; // for hosted
   /// For source = 'path'
   final String? path; // for path source
   /// For source = 'git'
@@ -24,10 +25,10 @@ class GlobalPackageConfig {
   final String? gitUrl;
 
   /// Global config
-  GlobalPackageConfig({
+  PubGlobalPackageConfig({
     this.source,
     this.path,
-    this.package,
+    required this.package,
     this.gitPath,
     this.gitRef,
     this.gitUrl,
@@ -36,47 +37,51 @@ class GlobalPackageConfig {
   /// json encodable map.
   Map<String, Object?> toMap() {
     return {
-      'source': source,
-      if (path != null) 'path': path,
-      if (package != null) 'package': package,
-      if (gitPath != null) 'git-path': gitPath,
-      if (gitRef != null) 'git-ref': gitRef,
-      if (gitUrl != null) 'git-url': gitUrl,
+      'package': package,
+      'source': ?source,
+      'path': ?path,
+
+      'git-path': ?gitPath,
+      'git-ref': ?gitRef,
+      'git-url': ?gitUrl,
     };
   }
 
   /// Global config from map
-  factory GlobalPackageConfig.fromMap(Map map) {
-    return GlobalPackageConfig(
+  factory PubGlobalPackageConfig.fromMap(Map map) {
+    return PubGlobalPackageConfig(
       source: map['source'] as String?,
       path: map['path'] as String?,
-      package: map['package'] as String?,
+      package: map['package'] as String,
       gitPath: map['git-path'] as String?,
       gitRef: map['git-ref'] as String?,
       gitUrl: map['git-url'] as String?,
     );
   }
 
+  /// To a package ready to install
+  PubGlobalPackage toPubGlobalPackage() {
+    var sourceType = source;
+    var package = this.package;
+    if (sourceType == 'git') {
+      return PubGlobalGitPackageInstall(
+        package,
+        gitUrl: gitUrl!,
+        gitRef: gitRef,
+        gitPath: gitPath,
+      );
+    } else if (sourceType == 'path') {
+      return PubGlobalPathPackageInstall(package, path: path!);
+    } else if (sourceType == 'hosted' || sourceType == null) {
+      return PubGlobalHostedPackageInstall(package);
+    } else {
+      throw ArgumentError('Unknown source type: $sourceType');
+    }
+  }
+
   /// Command line arg
   String toActivateArgsString() {
-    var sb = StringBuffer();
-    sb.write('--source $source');
-    if (source == 'git') {
-      sb.write(' $gitUrl');
-      if (gitPath != null) {
-        sb.write(' --git-path $gitPath');
-      }
-      if (gitRef != null) {
-        sb.write(' --git-ref $gitRef');
-      }
-    } else if (source == 'path') {
-      sb.write(' --path $path');
-    } else if (source == 'hosted') {
-      sb.write(' $package');
-    } else {
-      throw UnsupportedError('source $source');
-    }
-    return sb.toString();
+    return shellArguments(toPubGlobalPackage().activateArgs);
   }
 }
 
@@ -97,7 +102,7 @@ File _packageConfigFile(String package) {
 }
 
 /// Write the config
-Future<void> writeConfig(String package, GlobalPackageConfig config) async {
+Future<void> writeConfig(String package, PubGlobalPackageConfig config) async {
   await packagesConfigDir.create(recursive: true);
   var configFile = _packageConfigFile(package);
   await configFile.writeAsString(jsonEncode(config.toMap()));
@@ -127,11 +132,17 @@ Future<List<String>> listConfiguredPackages() async {
 }
 
 /// Read the config
-Future<GlobalPackageConfig?> readConfig(String package) async {
+Future<PubGlobalPackageConfig?> readConfig(String package) async {
   var configFile = _packageConfigFile(package);
   if (!configFile.existsSync()) {
     return null;
   }
   var map = jsonDecode(await configFile.readAsString()) as Map;
-  return GlobalPackageConfig.fromMap(map);
+  try {
+    return PubGlobalPackageConfig.fromMap(map);
+  } catch (e) {
+    // ignore: avoid_print
+    print('Error reading config for $package: $e');
+    return null;
+  }
 }
