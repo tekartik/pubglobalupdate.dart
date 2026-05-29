@@ -8,7 +8,6 @@ import 'package:process_run/shell.dart';
 
 /// Global config.
 class PubGlobalPackageConfig {
-
   /// Global config
   PubGlobalPackageConfig({
     this.source,
@@ -30,6 +29,7 @@ class PubGlobalPackageConfig {
       gitUrl: map['git-url'] as String?,
     );
   }
+
   /// Source (git/hosted/path), null means hosted
   final String? source;
 
