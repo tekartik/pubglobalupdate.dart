@@ -8,6 +8,28 @@ import 'package:process_run/shell.dart';
 
 /// Global config.
 class PubGlobalPackageConfig {
+
+  /// Global config
+  PubGlobalPackageConfig({
+    this.source,
+    this.path,
+    required this.package,
+    this.gitPath,
+    this.gitRef,
+    this.gitUrl,
+  });
+
+  /// Global config from map
+  factory PubGlobalPackageConfig.fromMap(Map map) {
+    return PubGlobalPackageConfig(
+      source: map['source'] as String?,
+      path: map['path'] as String?,
+      package: map['package'] as String,
+      gitPath: map['git-path'] as String?,
+      gitRef: map['git-ref'] as String?,
+      gitUrl: map['git-url'] as String?,
+    );
+  }
   /// Source (git/hosted/path), null means hosted
   final String? source;
 
@@ -24,16 +46,6 @@ class PubGlobalPackageConfig {
   /// For source = 'git'
   final String? gitUrl;
 
-  /// Global config
-  PubGlobalPackageConfig({
-    this.source,
-    this.path,
-    required this.package,
-    this.gitPath,
-    this.gitRef,
-    this.gitUrl,
-  });
-
   /// json encodable map.
   Map<String, Object?> toMap() {
     return {
@@ -45,18 +57,6 @@ class PubGlobalPackageConfig {
       'git-ref': ?gitRef,
       'git-url': ?gitUrl,
     };
-  }
-
-  /// Global config from map
-  factory PubGlobalPackageConfig.fromMap(Map map) {
-    return PubGlobalPackageConfig(
-      source: map['source'] as String?,
-      path: map['path'] as String?,
-      package: map['package'] as String,
-      gitPath: map['git-path'] as String?,
-      gitRef: map['git-ref'] as String?,
-      gitUrl: map['git-url'] as String?,
-    );
   }
 
   /// To a package ready to install

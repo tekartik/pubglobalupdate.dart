@@ -14,7 +14,7 @@ String get pubglobalupdateScript =>
     join(dirname(testScriptDirPath), 'bin', 'pubglobalupdate.dart');
 
 PubGlobalPackage? fromUpdatedLine(String line, String packageName) {
-  final updated = 'updated: ';
+  const updated = 'updated: ';
   if (line.toLowerCase().startsWith(updated)) {
     final start = line.indexOf(packageName, updated.length);
     if (start != -1) {
@@ -30,7 +30,7 @@ void main() {
   group('activate_package', () {
     test('path', () async {
       late List<ProcessResult> results;
-      final packageName = 'tekartik_pubglobalupdate_test_package';
+      const packageName = 'tekartik_pubglobalupdate_test_package';
       void findActivatedPackage() {
         late PubGlobalPathPackage foundPackage;
         for (final line in results.outLines) {
@@ -59,8 +59,8 @@ void main() {
 
     test('git', () async {
       late List<ProcessResult> results;
-      final packageName = 'process_run';
-      final source = 'https://github.com/tekartik/process_run.dart';
+      const packageName = 'process_run';
+      const source = 'https://github.com/tekartik/process_run.dart';
       void findActivatedPackage() {
         late PubGlobalGitPackage foundPackage;
         // print(result.stdout);
@@ -90,7 +90,7 @@ void main() {
 
     test('hosted', () async {
       late List<ProcessResult> results;
-      final packageName = 'dhttpd';
+      const packageName = 'dhttpd';
       void findActivatedPackage() {
         late PubGlobalHostedPackage foundPackage;
         //print(result);
