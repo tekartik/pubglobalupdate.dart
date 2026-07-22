@@ -134,17 +134,20 @@ Future main(List<String> arguments) async {
     if (source == 'git') {
       if (gitUrl == null) {
         stderr.writeln('git-url must be set');
+
         exit(1);
       }
     } else if (source == 'path') {
       if (path == null) {
         stderr.writeln('path must be set');
+
         exit(1);
       }
     } else if (source == 'hosted' || source == null) {
       // hosted is default
     } else {
       stderr.writeln('Invalid source $source');
+
       exit(1);
     }
     var config = PubGlobalPackageConfig(
@@ -155,16 +158,19 @@ Future main(List<String> arguments) async {
       gitPath: gitPath,
       gitRef: gitRef,
     );
+
     await writeConfig(configPackage, config);
 
     return;
   }
   if (argResults.flag('config-read')) {
     stderr.writeln('config-package must be set');
+
     exit(1);
   }
   if (argResults.flag('config-clear')) {
     stderr.writeln('config-package must be set');
+
     exit(1);
   }
 

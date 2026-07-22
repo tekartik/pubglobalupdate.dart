@@ -94,6 +94,7 @@ Directory get packagesConfigDir {
     'pubglobalupdate',
     'config',
   );
+
   return Directory(configDir);
 }
 
