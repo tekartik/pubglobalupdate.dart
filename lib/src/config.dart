@@ -19,7 +19,7 @@ class PubGlobalPackageConfig {
   });
 
   /// Global config from map
-  factory PubGlobalPackageConfig.fromMap(Map map) {
+  factory PubGlobalPackageConfig.fromMap(Map<Object?, Object?> map) {
     return PubGlobalPackageConfig(
       source: map['source'] as String?,
       path: map['path'] as String?,

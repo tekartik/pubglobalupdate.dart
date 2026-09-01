@@ -16,7 +16,7 @@ import 'package:pubglobalupdate/src/version.dart';
 final version = packageVersion;
 
 /// Update currently activated packages.
-Future main(List<String> arguments) async {
+Future<void> main(List<String> arguments) async {
   //setupQuickLogging();
 
   final parser = ArgParser(allowTrailingOptions: true);
