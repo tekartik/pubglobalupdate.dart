@@ -1,4 +1,4 @@
-import 'package:pub_semver/pub_semver.dart';
+import 'package:dev_build/package.dart';
 
 /// Update currently activated packages.
 Future<void> main(List<String> arguments) async =>
@@ -9,7 +9,9 @@ Future<void> activatePackage(
   String packageName, {
 
   /// Set when updating
-  Version? existingPackageVersion,
   bool? dryRun,
   bool? verbose,
+
+  /// Resolved from command line
+  PubGlobalPackage? existingPackage,
 }) async => throw UnimplementedError('Only supported for io applications');

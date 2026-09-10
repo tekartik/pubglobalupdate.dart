@@ -1,3 +1,6 @@
+@TestOn('vm')
+library;
+
 import 'package:process_run/process_run.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:pubglobalupdate/src/version.dart';
