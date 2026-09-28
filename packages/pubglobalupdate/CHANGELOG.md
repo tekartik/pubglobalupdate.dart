@@ -1,3 +1,18 @@
+## 1.1.0
+
+* `dart install` support (Dart 3.10+): packages installed with `dart install` are
+  listed and updated (`dart install … --overwrite`) next to the activated ones
+* Per package `tool` (`activate` or `install`) saved with `--config-package … --tool`,
+  one-off with `--tool` on `--install`; `--default-tool` for the packages without one
+  (resolution: command line, config, `hooks: true`, default, `activate`)
+* `--install` honors the tool; `--migrate` moves a package to the other tool and
+  saves it in the config; an update never moves a package, it prints the hint
+* `--list [--all]` shows the packages of both tools, `--doctor` checks the bin
+  directories, PATH order, duplicates, inactive bundles and configs
+* Config gains `version` (hosted constraint, `--version-constraint`),
+  `executables` (`-x`, activate only) and `hooks` (`--hooks`)
+* Requires `process_run` 1.3.7 and `pub_semver`
+
 ## 1.0.5
 
 * Moved to `packages/pubglobalupdate` in the repository (now a workspace). Activating

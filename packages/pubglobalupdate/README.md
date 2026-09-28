@@ -1,7 +1,8 @@
 # pubglobalupdate.dart
 
-Command (Linux/Mac/Windows) to update all current global activated packages (git, path or hosted) 
-to their latest version
+Command (Linux/Mac/Windows) to update all current global packages (git, path or hosted)
+to their latest version, whether they were installed with `dart pub global activate`
+or with `dart install` (Dart 3.10+, the one that supports build hooks).
 
 [![Build Status](https://travis-ci.org/tekartik/pubglobalupdate.dart.svg)](https://travis-ci.org/tekartik/pubglobalupdate.dart)
 
@@ -39,6 +40,30 @@ Update one package
 ````
 $ pubglobalupdate dhttpd
 ````
+
+## dart install support
+
+Each package can say which tool installs it, `activate` (`dart pub global activate`,
+the default) or `install` (`dart install`):
+
+````
+# saved with the rest of the package config
+$ pubglobalupdate --config-package my_tool --source git --git-url https://github.com/me/my_tool --tool install
+# one-off
+$ pubglobalupdate --install --tool install my_tool
+# default for the packages without a configured tool
+$ pubglobalupdate --default-tool install
+# move an installed package to the other tool (config kept and updated)
+$ pubglobalupdate --migrate my_tool
+# what is installed with which tool, and a health check
+$ pubglobalupdate --list
+$ pubglobalupdate --doctor
+````
+
+The tool of an install is resolved in this order: `--tool`, the config, `hooks: true`
+in the config (forces `install`), the default tool, `activate`. An update always runs
+with the tool that owns the package and only prints a `--migrate` hint when the config
+asks for the other one, so nothing is uninstalled without being asked.
 
 ## Dev
 

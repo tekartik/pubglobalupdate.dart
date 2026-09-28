@@ -3,9 +3,10 @@ name: pubglobalupdate-package-config
 description: >-
   Use when a globally activated Dart tool must track a git branch, a git
   sub directory or a local checkout with pubglobalupdate: save, read, list
-  and clear a per-package activation source (`--config-package`, `--source`,
-  `--git-url`, `--git-ref`, `--git-path`, `--path`, `--config-list`), and
-  where pubglobalupdate stores that configuration.
+  and clear a per-package activation source and tool (`--config-package`,
+  `--source`, `--git-url`, `--git-ref`, `--git-path`, `--path`, `--tool`,
+  `--config-list`, `--default-tool`), and where pubglobalupdate stores that
+  configuration.
 ---
 
 # Per-package activation config
@@ -55,6 +56,10 @@ what `dart pub global list` reports.
 | `git-ref`  | Branch, tag or commit                      | git         |
 | `git-path` | Sub directory in the repository            | git         |
 | `path`     | Local directory of the package             | path        |
+| `tool`     | `activate` or `install` (`--tool`)         | all         |
+| `version`  | Hosted constraint (`--version-constraint`) | hosted      |
+| `executables` | Executables on PATH (`-x`, activate only) | all      |
+| `hooks`    | `true` forces `dart install` (`--hooks`)   | all         |
 
 ## Examples
 

@@ -5,6 +5,7 @@ import 'package:dev_build/package.dart';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 import 'package:process_run/shell.dart';
+import 'package:pubglobalupdate/src/tool.dart';
 
 /// Global config.
 class PubGlobalPackageConfig {
@@ -16,6 +17,10 @@ class PubGlobalPackageConfig {
     this.gitPath,
     this.gitRef,
     this.gitUrl,
+    this.tool,
+    this.version,
+    this.executables,
+    this.hooks,
   });
 
   /// Global config from map
@@ -27,6 +32,10 @@ class PubGlobalPackageConfig {
       gitPath: map['git-path'] as String?,
       gitRef: map['git-ref'] as String?,
       gitUrl: map['git-url'] as String?,
+      tool: map['tool'] as String?,
+      version: map['version'] as String?,
+      executables: (map['executables'] as List?)?.cast<String>(),
+      hooks: map['hooks'] as bool?,
     );
   }
 
@@ -46,6 +55,26 @@ class PubGlobalPackageConfig {
   /// For source = 'git'
   final String? gitUrl;
 
+  /// The tool: `activate` (dart pub global activate) or `install`
+  /// (dart install), null means not configured.
+  final String? tool;
+
+  /// Version constraint (hosted source), for example `^1.3.0`.
+  final String? version;
+
+  /// Executables to put on PATH (`dart pub global activate --executable`),
+  /// ignored by `dart install` which has no equivalent.
+  final List<String>? executables;
+
+  /// True when the package needs build hooks, which forces `dart install`.
+  final bool? hooks;
+
+  /// The configured tool, null when not configured or unknown.
+  PubGlobalTool? get toolOrNull => PubGlobalTool.tryParse(tool);
+
+  /// True for the hosted source (default).
+  bool get isHosted => source == 'hosted' || source == null;
+
   /// json encodable map.
   Map<String, Object?> toMap() {
     return {
@@ -56,8 +85,27 @@ class PubGlobalPackageConfig {
       'git-path': ?gitPath,
       'git-ref': ?gitRef,
       'git-url': ?gitUrl,
+      'tool': ?tool,
+      'version': ?version,
+      'executables': ?executables,
+      'hooks': ?hooks,
     };
   }
+
+  /// A copy with [tool] (and optionally [hooks]) changed.
+  PubGlobalPackageConfig copyWith({String? tool, bool? hooks}) =>
+      PubGlobalPackageConfig(
+        package: package,
+        source: source,
+        path: path,
+        gitPath: gitPath,
+        gitRef: gitRef,
+        gitUrl: gitUrl,
+        tool: tool ?? this.tool,
+        version: version,
+        executables: executables,
+        hooks: hooks ?? this.hooks,
+      );
 
   /// To a package ready to install
   PubGlobalPackage toPubGlobalPackage() {
@@ -79,10 +127,36 @@ class PubGlobalPackageConfig {
     }
   }
 
-  /// Command line arg
-  String toActivateArgsString() {
-    return shellArguments(toPubGlobalPackage().activateArgs);
+  /// `dart pub global activate` arguments.
+  List<String> get activateArgs => [
+    ...toPubGlobalPackage().activateArgs,
+    if (isHosted && version != null) version!,
+    for (final executable in executables ?? const <String>[]) ...[
+      '--executable',
+      executable,
+    ],
+  ];
+
+  /// `dart pub global activate` arguments as a command line string.
+  String toActivateArgsString() => shellArguments(activateArgs);
+
+  /// `dart install` arguments (descriptor form).
+  List<String> get installArgs {
+    if (source == 'git') {
+      final parts = [
+        'url: $gitUrl',
+        if (gitRef != null) 'ref: $gitRef',
+        if (gitPath != null) 'path: $gitPath',
+      ];
+      return ['$package@{git: {${parts.join(', ')}}}'];
+    } else if (source == 'path') {
+      return ['$package@{path: $path}'];
+    }
+    return [if (version == null) package else '$package@$version'];
   }
+
+  /// `dart install` arguments as a command line string.
+  String toInstallArgsString() => shellArguments(installArgs);
 }
 
 @internal
