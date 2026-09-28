@@ -1,0 +1,21 @@
+name: tkhellohooks
+description: Hello world CLI with a build hook dependency, prints the sqlite version.
+version: 1.0.0
+publish_to: none
+repository: https://github.com/tekartik/pubglobalupdate.dart/tree/main/example/packages/tkhellohooks
+
+environment:
+  sdk: ^3.10.0
+resolution: workspace
+
+dependencies:
+  # brings sqlite3 3.x and its hook/build.dart
+  sqflite_common_ffi: ">=2.4.3 <4.0.0"
+  tkhello:
+    path: ../tkhello
+
+dev_dependencies:
+  lints: ">=6.1.0"
+
+executables:
+  tkhellohooks: main
