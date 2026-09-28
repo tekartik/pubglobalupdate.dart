@@ -6,11 +6,11 @@ enable-beta-ecosystems: true
 
 updates:
   - package-ecosystem: "pub"
-    directory: "."
+    directory: "packages/pubglobalupdate"
     schedule:
       interval: "monthly"
   - package-ecosystem: "pub"
-    directory: "test/data/test_package"
+    directory: "packages/pubglobalupdate/test/data/test_package"
     schedule:
       interval: "monthly"
   - package-ecosystem: "github-actions"

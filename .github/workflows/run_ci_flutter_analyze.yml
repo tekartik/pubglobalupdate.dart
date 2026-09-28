@@ -13,3 +13,4 @@ jobs:
         uses: tekartik/ci.dart/.github/actions/run_ci_flutter_analyze@v1
         with:
           flutter-channel: stable
+          working-directory: packages/pubglobalupdate

@@ -1,3 +1,8 @@
+## 1.0.5
+
+* Moved to `packages/pubglobalupdate` in the repository (now a workspace). Activating
+  from git needs `--git-path packages/pubglobalupdate`
+
 ## 1.0.4
 
 * Add `pubglobalupdate-dart-api`, `pubglobalupdate-package-config` and `pubglobalupdate-update-packages` agent skills in `skills/`, installable with `dart run skills@ get`
