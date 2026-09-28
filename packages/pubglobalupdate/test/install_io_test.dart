@@ -69,10 +69,18 @@ void main() {
       lines = (await shell.run('dart run $script --install tkhello')).outLines;
       expect(lines.first, 'installing: tkhello (install)');
       expect(lines.last, startsWith('installed: tkhello '));
-      expect(
-        File(join(dataHome, 'install', 'bin', 'tkhello')).existsSync(),
-        isTrue,
-      );
+      if (Platform.isWindows) {
+        // Windows creates a .bat file for the binstub.
+        expect(
+          File(join(dataHome, 'install', 'bin', 'tkhello.bat')).existsSync(),
+          isTrue,
+        );
+      } else {
+        expect(
+          File(join(dataHome, 'install', 'bin', 'tkhello')).existsSync(),
+          isTrue,
+        );
+      }
 
       // Listed with its tool.
       lines = (await shell.run('dart run $script --list')).outLines;
