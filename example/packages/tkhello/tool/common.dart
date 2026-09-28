@@ -6,15 +6,14 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:path/path.dart' as p;
 import 'package:process_run/shell.dart';
-import 'package:tkhello/tkhello.dart';
 
 const allPackages = ['tkhello', 'tkhellohooks'];
 
-ToolOs get currentOs => Platform.isWindows
-    ? ToolOs.windows
+DartToolOs get currentOs => Platform.isWindows
+    ? DartToolOs.windows
     : Platform.isMacOS
-    ? ToolOs.macos
-    : ToolOs.linux;
+    ? DartToolOs.macos
+    : DartToolOs.linux;
 
 /// Common options of every script.
 ArgParser experimentArgParser() => ArgParser()
@@ -162,7 +161,7 @@ class Experiment {
       env['PUB_CACHE'] = p.join(isolatedDir, 'pub-cache');
       env['DART_DATA_HOME'] = p.join(isolatedDir, 'dart-data-home');
     }
-    paths = ToolPaths(os: currentOs, environment: env);
+    paths = DartToolPaths(os: currentOs, environment: env);
   }
 
   final String package;
@@ -173,7 +172,7 @@ class Experiment {
   final String? gitRef;
   late final String repoRoot;
   late final Map<String, String> env;
-  late final ToolPaths paths;
+  late final DartToolPaths paths;
 
   String get isolatedDir => p.join(repoRoot, '.local', 'isolated');
   String get packageDir => p.join(repoRoot, 'example', 'packages', package);
@@ -219,16 +218,29 @@ class Experiment {
       verbose: verbose,
     );
     final watch = Stopwatch()..start();
-    final results = await shell.run(command);
-    final result = results.last;
-    final step = StepResult(
-      title: title,
-      command: command,
-      exitCode: result.exitCode,
-      stdout: result.stdout as String,
-      stderr: result.stderr as String,
-      duration: watch.elapsed,
-    );
+    late final StepResult step;
+    try {
+      final results = await shell.run(command);
+      final result = results.last;
+      step = StepResult(
+        title: title,
+        command: command,
+        exitCode: result.exitCode,
+        stdout: result.stdout as String,
+        stderr: result.stderr as String,
+        duration: watch.elapsed,
+      );
+    } on ShellException catch (e) {
+      // Missing executable (ProcessException): record it, keep going.
+      step = StepResult(
+        title: title,
+        command: command,
+        exitCode: -1,
+        stdout: '',
+        stderr: e.message,
+        duration: watch.elapsed,
+      );
+    }
     report.step(step);
     if (!step.ok && !verbose) {
       stdout.writeln(

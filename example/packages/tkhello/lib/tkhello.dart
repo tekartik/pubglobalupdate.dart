@@ -7,5 +7,4 @@ library;
 export 'src/hello_app.dart' show runHelloApp;
 export 'src/launch_info.dart' show LaunchInfo, LaunchMode, detectLaunchMode;
 export 'src/marker.dart' show buildMarker;
-export 'src/tool_paths.dart' show ToolOs, ToolPaths;
 export 'src/version.dart' show tkhelloVersion;

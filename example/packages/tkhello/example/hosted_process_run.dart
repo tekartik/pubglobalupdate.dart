@@ -8,20 +8,12 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:process_run/shell.dart';
-import 'package:tkhello/tkhello.dart';
 
 const package = 'process_run';
 const exe = 'ds';
 
 Future<void> main(List<String> arguments) async {
-  final paths = ToolPaths(
-    os: Platform.isWindows
-        ? ToolOs.windows
-        : Platform.isMacOS
-        ? ToolOs.macos
-        : ToolOs.linux,
-    environment: Platform.environment,
-  );
+  final paths = dartToolPaths;
   final bat = Platform.isWindows ? '.bat' : '';
   final binstub = p.join(paths.pubCacheBinPath, '$exe$bat');
   final link = p.join(paths.dartInstallBinPath, '$exe$bat');

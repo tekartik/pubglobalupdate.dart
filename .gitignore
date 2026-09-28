@@ -24,3 +24,5 @@ pubspec.lock
 .*
 !.gitignore
 !.github/
+# Local dependency overrides
+pubspec_overrides.yaml

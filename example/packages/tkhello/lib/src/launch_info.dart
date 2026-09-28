@@ -1,8 +1,7 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
-
-import 'tool_paths.dart';
+import 'package:process_run/shell.dart';
 
 /// How the executable was launched.
 enum LaunchMode {
@@ -54,16 +53,6 @@ LaunchMode detectLaunchMode({
   return LaunchMode.aotExecutable;
 }
 
-ToolOs _currentOs() {
-  if (Platform.isWindows) {
-    return ToolOs.windows;
-  }
-  if (Platform.isMacOS) {
-    return ToolOs.macos;
-  }
-  return ToolOs.linux;
-}
-
 String _scriptPath(Uri script) {
   if (script.scheme == 'file') {
     return script.toFilePath();
@@ -75,15 +64,13 @@ String _scriptPath(Uri script) {
 class LaunchInfo {
   /// Diagnostics of the current process, [executableName] being the name the
   /// tools put on `PATH`.
-  LaunchInfo.current({required this.executableName, ToolPaths? toolPaths})
+  LaunchInfo.current({required this.executableName, DartToolPaths? toolPaths})
     : script = _scriptPath(Platform.script),
       executable = Platform.executable,
       resolvedExecutable = Platform.resolvedExecutable,
       executableArguments = Platform.executableArguments,
       dartVersion = Platform.version,
-      paths =
-          toolPaths ??
-          ToolPaths(os: _currentOs(), environment: Platform.environment) {
+      paths = toolPaths ?? dartToolPaths {
     mode = detectLaunchMode(
       script: script,
       executable: executable,
@@ -109,8 +96,8 @@ class LaunchInfo {
   /// `Platform.version`.
   final String dartVersion;
 
-  /// The path rules used.
-  final ToolPaths paths;
+  /// The path rules used (process_run `DartToolPaths`).
+  final DartToolPaths paths;
 
   /// The detected launch mode.
   late final LaunchMode mode;
@@ -119,12 +106,13 @@ class LaunchInfo {
   bool get isAot =>
       mode == LaunchMode.dartInstall || mode == LaunchMode.aotExecutable;
 
-  static bool _exists(String path) =>
-      FileSystemEntity.typeSync(path) != FileSystemEntityType.notFound;
-
-  /// The first `PATH` match of [executableName], if any.
-  String? get executableOnPath =>
-      paths.findOnPath(executableName, exists: _exists);
+  /// The first `PATH` match of [executableName], if any (process_run
+  /// `whichSync` on the environment of [paths]).
+  String? get executableOnPath => whichSync(
+    executableName,
+    environment: paths.environment,
+    includeParentEnvironment: false,
+  );
 
   String _onPath(String dir) {
     final index = paths.pathIndexOf(dir);
