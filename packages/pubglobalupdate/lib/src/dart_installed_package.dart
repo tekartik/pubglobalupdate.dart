@@ -1,4 +1,5 @@
 import 'package:pub_semver/pub_semver.dart';
+import 'package:pubglobalupdate/src/install_descriptor.dart';
 
 /// A line of `dart installed [--all]` (Dart 3.10+).
 ///
@@ -126,11 +127,9 @@ class DartInstalledPackage {
 
   /// `dart install` arguments that re-install the same source (the git ref
   /// is not pinned, so an update takes the branch head).
-  List<String> get installArgs => switch (source) {
-    'git' => ['$name@{git: {url: $gitUrl}}'],
-    'path' => ['$name@{path: $path}'],
-    _ => [name],
-  };
+  List<String> get installArgs => [
+    dartInstallDescriptor(name, source: source, gitUrl: gitUrl, path: path),
+  ];
 
   /// `dart pub global activate` arguments for the same source.
   List<String> get activateArgs => switch (source) {

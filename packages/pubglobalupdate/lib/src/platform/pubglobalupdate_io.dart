@@ -308,6 +308,16 @@ String _activateCommand(List<String> args) =>
 String _installCommand(List<String> args) =>
     'dart install ${shellArguments(args)} --overwrite';
 
+/// The [tool] command, from the [config] arguments if any, else
+/// [fallbackArgs].
+String _toolCommand(
+  PubGlobalTool tool,
+  PubGlobalPackageConfig? config,
+  List<String> fallbackArgs,
+) => tool == PubGlobalTool.activate
+    ? _activateCommand(config?.activateArgs ?? fallbackArgs)
+    : _installCommand(config?.installArgs ?? fallbackArgs);
+
 /// Runs [cmd], prints `installed:`/`updated:` lines.
 Future<void> _runToolCommand(
   String cmd, {
@@ -418,12 +428,7 @@ Future<void> installPackage(
   verbose ??= false;
   final config = await readConfig(packageName);
   final resolved = await resolveTool(packageName, tool: tool, config: config);
-  final String cmd;
-  if (resolved == PubGlobalTool.activate) {
-    cmd = _activateCommand(config?.activateArgs ?? [packageName]);
-  } else {
-    cmd = _installCommand(config?.installArgs ?? [packageName]);
-  }
+  final cmd = _toolCommand(resolved, config, [packageName]);
   await _runToolCommand(
     cmd,
     packageName: packageName,
@@ -452,12 +457,7 @@ Future<void> updatePackage(
       'pubglobalupdate --migrate ${package.name}',
     );
   }
-  final String cmd;
-  if (package.tool == PubGlobalTool.activate) {
-    cmd = _activateCommand(config?.activateArgs ?? package.updateArgs);
-  } else {
-    cmd = _installCommand(config?.installArgs ?? package.updateArgs);
-  }
+  final cmd = _toolCommand(package.tool, config, package.updateArgs);
   await _runToolCommand(
     cmd,
     packageName: package.name,
@@ -526,12 +526,7 @@ Future<void> migratePackage(
       await run(cmd, verbose: verbose);
     }
   }
-  final String cmd;
-  if (target == PubGlobalTool.activate) {
-    cmd = _activateCommand(config?.activateArgs ?? from.otherToolArgs);
-  } else {
-    cmd = _installCommand(config?.installArgs ?? from.otherToolArgs);
-  }
+  final cmd = _toolCommand(target, config, from.otherToolArgs);
   await _runToolCommand(
     cmd,
     packageName: packageName,

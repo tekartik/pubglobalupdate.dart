@@ -1,3 +1,10 @@
+## 1.1.1
+
+* `--doctor`, `--config-list` and `--package-list` no longer crash when no package
+  config was ever saved
+* An unreadable package config is reported on stderr and ignored instead of
+  aborting the update; a hand written yaml config is read too
+
 ## 1.1.0+1
 
 * `dart install` support (Dart 3.10+): packages installed with `dart install` are

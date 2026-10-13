@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dev_build/package.dart';
 import 'package:process_run/shell.dart';
 import 'package:pubglobalupdate/src/dart_installed_package.dart';
+import 'package:pubglobalupdate/src/install_descriptor.dart';
 import 'package:pubglobalupdate/src/tool.dart';
 
 /// A package installed by one of the tools, from its list line.
@@ -74,12 +75,14 @@ class GlobalToolPackage {
     final pubGlobal = this.pubGlobal;
     if (pubGlobal != null) {
       // to dart install
-      if (pubGlobal is PubGlobalGitPackage) {
-        return ['$name@{git: {url: ${pubGlobal.source}}}'];
-      } else if (pubGlobal is PubGlobalPathPackage) {
-        return ['$name@{path: ${pubGlobal.source}}'];
-      }
-      return [name];
+      return [
+        dartInstallDescriptor(
+          name,
+          source: source,
+          gitUrl: pubGlobal is PubGlobalGitPackage ? pubGlobal.source : null,
+          path: pubGlobal is PubGlobalPathPackage ? pubGlobal.source : null,
+        ),
+      ];
     }
     // to pub global activate
     return installed!.activateArgs;

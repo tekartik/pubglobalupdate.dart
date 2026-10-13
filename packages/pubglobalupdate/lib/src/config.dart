@@ -5,7 +5,9 @@ import 'package:dev_build/package.dart';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 import 'package:process_run/shell.dart';
+import 'package:pubglobalupdate/src/install_descriptor.dart';
 import 'package:pubglobalupdate/src/tool.dart';
+import 'package:yaml/yaml.dart';
 
 /// Global config.
 class PubGlobalPackageConfig {
@@ -141,19 +143,17 @@ class PubGlobalPackageConfig {
   String toActivateArgsString() => shellArguments(activateArgs);
 
   /// `dart install` arguments (descriptor form).
-  List<String> get installArgs {
-    if (source == 'git') {
-      final parts = [
-        'url: $gitUrl',
-        if (gitRef != null) 'ref: $gitRef',
-        if (gitPath != null) 'path: $gitPath',
-      ];
-      return ['$package@{git: {${parts.join(', ')}}}'];
-    } else if (source == 'path') {
-      return ['$package@{path: $path}'];
-    }
-    return [if (version == null) package else '$package@$version'];
-  }
+  List<String> get installArgs => [
+    dartInstallDescriptor(
+      package,
+      source: source,
+      gitUrl: gitUrl,
+      gitRef: gitRef,
+      gitPath: gitPath,
+      path: path,
+      version: version,
+    ),
+  ];
 
   /// `dart install` arguments as a command line string.
   String toInstallArgsString() => shellArguments(installArgs);
@@ -193,8 +193,14 @@ Future<void> deleteConfig(String package) async {
 }
 
 /// List all configured packages.
+///
+/// Empty when no config was ever saved (no config directory).
 Future<List<String>> listConfiguredPackages() async {
-  var list = await Directory(packagesConfigDir.path)
+  var dir = packagesConfigDir;
+  if (!dir.existsSync()) {
+    return <String>[];
+  }
+  var list = await dir
       .list()
       .where(
         (entity) =>
@@ -207,17 +213,22 @@ Future<List<String>> listConfiguredPackages() async {
 }
 
 /// Read the config
+///
+/// The file is written as json, a hand written yaml file is read too. An
+/// unreadable file is reported on stderr and ignored (null).
 Future<PubGlobalPackageConfig?> readConfig(String package) async {
   var configFile = _packageConfigFile(package);
   if (!configFile.existsSync()) {
     return null;
   }
-  var map = jsonDecode(await configFile.readAsString()) as Map;
   try {
+    // yaml also reads json
+    var map = loadYaml(await configFile.readAsString()) as Map;
     return PubGlobalPackageConfig.fromMap(map);
   } catch (e) {
-    // ignore: avoid_print
-    print('Error reading config for $package: $e');
+    stderr.writeln(
+      'Error reading config for $package (${configFile.path}): $e',
+    );
     return null;
   }
 }
