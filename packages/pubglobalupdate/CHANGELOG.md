@@ -1,4 +1,4 @@
-## 1.1.0
+## 1.1.0+1
 
 * `dart install` support (Dart 3.10+): packages installed with `dart install` are
   listed and updated (`dart install … --overwrite`) next to the activated ones
