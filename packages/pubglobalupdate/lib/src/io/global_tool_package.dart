@@ -4,21 +4,46 @@ import 'package:dev_build/package.dart';
 import 'package:process_run/shell.dart';
 import 'package:pubglobalupdate/src/dart_installed_package.dart';
 import 'package:pubglobalupdate/src/install_descriptor.dart';
+import 'package:pubglobalupdate/src/io/git_lock_source.dart';
 import 'package:pubglobalupdate/src/tool.dart';
 
 /// A package installed by one of the tools, from its list line.
 class GlobalToolPackage {
   /// From a `dart pub global list` line.
-  GlobalToolPackage.fromPubGlobal(PubGlobalPackage package)
+  GlobalToolPackage.fromPubGlobal(PubGlobalPackage package, {this.gitLock})
     : tool = PubGlobalTool.activate,
       pubGlobal = package,
       installed = null;
 
   /// From a `dart installed` line.
-  GlobalToolPackage.fromInstalled(DartInstalledPackage package)
+  GlobalToolPackage.fromInstalled(DartInstalledPackage package, {this.gitLock})
     : tool = PubGlobalTool.install,
       pubGlobal = null,
       installed = package;
+
+  /// The git source read from the lock file of the tool (git path and ref,
+  /// not in the list lines), ignored when its url differs.
+  final GitLockSource? gitLock;
+
+  GitLockSource? get _gitLock {
+    final gitLock = this.gitLock;
+    final sourceValue = this.sourceValue;
+    if (gitLock != null &&
+        source == 'git' &&
+        sourceValue != null &&
+        isSameGitUrl(gitLock.url, sourceValue)) {
+      return gitLock;
+    }
+    return null;
+  }
+
+  /// Path of a git package in its repository (from the lock file), null at
+  /// its root or when unknown.
+  String? get gitPath => _gitLock?.path;
+
+  /// Requested git ref (from the lock file), null for the default branch or
+  /// when unknown.
+  String? get gitRef => _gitLock?.ref;
 
   /// The tool that owns it.
   final PubGlobalTool tool;
@@ -67,31 +92,47 @@ class GlobalToolPackage {
   bool get active => installed?.active ?? true;
 
   /// Arguments to re-install with the same tool (an update).
-  List<String> get updateArgs =>
-      pubGlobal?.activateArgs ?? installed!.installArgs;
+  List<String> get updateArgs => argsFor(tool);
 
   /// Arguments to install with the other tool (a migration).
-  List<String> get otherToolArgs {
-    final pubGlobal = this.pubGlobal;
-    if (pubGlobal != null) {
-      // to dart install
-      return [
-        dartInstallDescriptor(
-          name,
-          source: source,
-          gitUrl: pubGlobal is PubGlobalGitPackage ? pubGlobal.source : null,
-          path: pubGlobal is PubGlobalPathPackage ? pubGlobal.source : null,
-        ),
-      ];
+  List<String> get otherToolArgs => argsFor(tool.other);
+
+  /// Arguments to install the same source with [tool].
+  List<String> argsFor(PubGlobalTool tool) {
+    final source = this.source;
+    final sourceValue = this.sourceValue;
+    if (tool == PubGlobalTool.activate) {
+      if (source == 'git' && sourceValue != null) {
+        return [
+          '--source',
+          'git',
+          sourceValue,
+          if (gitPath != null) ...['--git-path', gitPath!],
+          if (gitRef != null) ...['--git-ref', gitRef!],
+        ];
+      } else if (source == 'path' && sourceValue != null) {
+        return ['--source', 'path', sourceValue];
+      }
+      return [name];
     }
-    // to pub global activate
-    return installed!.activateArgs;
+    return [
+      dartInstallDescriptor(
+        name,
+        source: source,
+        gitUrl: source == 'git' ? sourceValue : null,
+        gitPath: source == 'git' ? gitPath : null,
+        gitRef: source == 'git' ? gitRef : null,
+        path: source == 'path' ? sourceValue : null,
+      ),
+    ];
   }
 
   @override
   String toString() =>
       '$name $version ($tool'
       '${source == 'hosted' ? '' : ', $source ${sourceValue ?? ''}'}'
+      '${gitPath == null ? '' : ' path $gitPath'}'
+      '${gitRef == null ? '' : ' ref $gitRef'}'
       '${active ? '' : ', not active'})';
 }
 
@@ -111,7 +152,14 @@ Future<List<GlobalToolPackage>> listGlobalToolPackages({
     if (package == null) {
       stderr.writeln("Cannot parse package information '$line'");
     } else {
-      packages.add(GlobalToolPackage.fromPubGlobal(package));
+      packages.add(
+        GlobalToolPackage.fromPubGlobal(
+          package,
+          gitLock: package is PubGlobalGitPackage
+              ? readGitLockSource(pubGlobalLockPath(package.name), package.name)
+              : null,
+        ),
+      );
     }
   }
   try {
@@ -128,7 +176,18 @@ Future<List<GlobalToolPackage>> listGlobalToolPackages({
       if (package == null) {
         stderr.writeln("Cannot parse installed package information '$line'");
       } else {
-        packages.add(GlobalToolPackage.fromInstalled(package));
+        final gitRef = package.gitRef;
+        packages.add(
+          GlobalToolPackage.fromInstalled(
+            package,
+            gitLock: gitRef != null
+                ? readGitLockSource(
+                    dartInstallGitLockPath(package.name, gitRef),
+                    package.name,
+                  )
+                : null,
+          ),
+        );
       }
     }
   } on ShellException catch (e) {

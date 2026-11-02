@@ -1,3 +1,9 @@
+## 1.1.2
+
+* Updating or migrating a git package without a saved config keeps its path in the
+  repository and its ref, read from the lock file of the tool (pub global
+  `pubspec.lock` or `dart install` app bundle); `--list` shows them
+
 ## 1.1.1
 
 * `--doctor`, `--config-list` and `--package-list` no longer crash when no package

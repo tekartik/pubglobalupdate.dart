@@ -540,6 +540,8 @@ Future<void> migratePackage(
       package: packageName,
       source: from.source == 'hosted' ? null : from.source,
       gitUrl: from.source == 'git' ? from.sourceValue : null,
+      gitPath: from.gitPath,
+      gitRef: from.gitRef,
       path: from.source == 'path' ? from.sourceValue : null,
     );
     await writeConfig(packageName, config.copyWith(tool: target.name));
