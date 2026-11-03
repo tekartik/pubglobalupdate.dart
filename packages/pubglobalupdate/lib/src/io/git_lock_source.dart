@@ -29,18 +29,22 @@ class GitLockSource {
 }
 
 /// True if [url1] and [url2] are the same git url, `dart pub global list`
-/// prints a `file://` url as a path.
+/// prints a `file://` url as a path (with the separators of the platform).
 bool isSameGitUrl(String url1, String url2) {
-  String normalize(String url) {
-    if (url.startsWith('file:')) {
-      try {
-        return Uri.parse(url).toFilePath();
-      } catch (_) {}
-    }
-    return url;
+  if (url1 == url2) {
+    return true;
   }
-
-  return url1 == url2 || normalize(url1) == normalize(url2);
+  bool isFileUrl(String url) => url.startsWith('file:');
+  if (!isFileUrl(url1) && !isFileUrl(url2)) {
+    return false;
+  }
+  String toPath(String url) =>
+      normalize(isFileUrl(url) ? Uri.parse(url).toFilePath() : url);
+  try {
+    return toPath(url1) == toPath(url2);
+  } catch (_) {
+    return false;
+  }
 }
 
 /// The git source of [package] in a `pubspec.lock` [content], null if it is
