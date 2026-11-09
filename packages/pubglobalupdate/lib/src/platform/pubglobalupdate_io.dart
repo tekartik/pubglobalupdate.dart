@@ -21,7 +21,12 @@ export 'package:pubglobalupdate/src/io/global_tool_package.dart'
 /// App version.
 final version = packageVersion;
 
-/// Update currently activated and installed packages.
+/// Runs the `pubglobalupdate` command line with [arguments]: by default
+/// updates every package of `dart pub global activate` and `dart install`.
+///
+/// A package that fails is reported on stderr and the others are still
+/// handled, the exit code is then 1. Writes on stdout/stderr and may call
+/// `exit(1)` on invalid options.
 Future<void> main(List<String> arguments) async {
   final parser = ArgParser(allowTrailingOptions: true);
   parser.addFlag('help', abbr: 'h', help: 'Usage help', negatable: false);
@@ -262,15 +267,27 @@ Future<void> main(List<String> arguments) async {
 
   final packages = argResults.rest;
   final install = argResults.flag('install');
+  // A failing package is reported, the others are still handled.
+  final failed = <String>[];
+  Future<void> forPackage(String name, Future<void> Function() action) async {
+    if (!await _runForPackage(name, action)) {
+      failed.add(name);
+    }
+  }
+
   if (install) {
     for (var package in packages) {
-      await installPackage(
+      await forPackage(
         package,
-        tool: toolOption,
-        dryRun: dryRun,
-        verbose: verbose,
+        () => installPackage(
+          package,
+          tool: toolOption,
+          dryRun: dryRun,
+          verbose: verbose,
+        ),
       );
     }
+    _reportFailed(failed);
     return;
   }
   if (argResults.flag('migrate')) {
@@ -279,13 +296,17 @@ Future<void> main(List<String> arguments) async {
       exit(1);
     }
     for (var package in packages) {
-      await migratePackage(
+      await forPackage(
         package,
-        tool: toolOption,
-        dryRun: dryRun,
-        verbose: verbose,
+        () => migratePackage(
+          package,
+          tool: toolOption,
+          dryRun: dryRun,
+          verbose: verbose,
+        ),
       );
     }
+    _reportFailed(failed);
     return;
   }
 
@@ -298,7 +319,39 @@ Future<void> main(List<String> arguments) async {
     if (toolOption != null && package.tool != toolOption) {
       continue;
     }
-    await updatePackage(package, dryRun: dryRun, verbose: verbose);
+    await forPackage(
+      package.name,
+      () => updatePackage(package, dryRun: dryRun, verbose: verbose),
+    );
+  }
+  _reportFailed(failed);
+}
+
+/// Runs [action] for [packageName]: an error is written on stderr instead of
+/// stopping the other packages. Returns false on error.
+Future<bool> _runForPackage(
+  String packageName,
+  Future<void> Function() action,
+) async {
+  try {
+    await action();
+    return true;
+  } catch (e) {
+    var text = '$e';
+    if (e is ShellException) {
+      final errText = e.shellProcessResult?.errText.trim() ?? '';
+      text = [e.message, if (errText.isNotEmpty) errText].join('\n');
+    }
+    stderr.writeln('error: $packageName: $text');
+    return false;
+  }
+}
+
+/// Lists the [failed] packages on stderr, exit code 1 when there is one.
+void _reportFailed(List<String> failed) {
+  if (failed.isNotEmpty) {
+    stderr.writeln('failed: ${failed.join(' ')}');
+    exitCode = 1;
   }
 }
 

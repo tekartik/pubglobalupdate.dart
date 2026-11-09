@@ -1,10 +1,12 @@
 ---
 name: pubglobalupdate-dart-api
 description: >-
-  Use when writing a Dart script or tool that updates or activates global
-  pub packages programmatically with `package:pubglobalupdate` (`main`,
-  `activatePackage`) and `PubGlobalPackage` from `package:dev_build`, or when
-  pubglobalupdate appears in a pubspec dependencies section.
+  Use when writing a Dart script or tool that updates, activates, installs
+  or migrates global Dart packages programmatically with
+  `package:pubglobalupdate` (`main`, `activatePackage`, `installPackage`,
+  `migratePackage`, `PubGlobalTool`) and `PubGlobalPackage` from
+  `package:dev_build`, or when pubglobalupdate appears in a pubspec
+  dependencies section.
 ---
 
 # pubglobalupdate Dart API
@@ -19,7 +21,7 @@ VM only (`dart:io`).
 
   ```yaml
   dependencies:
-    pubglobalupdate: ^1.0.3
+    pubglobalupdate: ^1.1.2
   ```
 
 - Import only the public library:
@@ -28,13 +30,15 @@ VM only (`dart:io`).
   import 'package:pubglobalupdate/pubglobalupdate.dart';
   ```
 
-  It exports exactly two functions: `main` and `activatePackage`. Everything
-  under `lib/src/` is private API and may change without a major version
-  bump.
+  It exports `main`, `activatePackage`, `installPackage`, `migratePackage`
+  and the `PubGlobalTool` enum (`activate`, `install`). Everything under
+  `lib/src/` is private API and may change without a major version bump.
 - `Future<void> main(List<String> arguments)` runs the full command line
   behaviour. Pass the same arguments you would pass on the shell. It writes to
   `stdout`/`stderr` and may call `exit(1)` on invalid `--config-*` usage, so do
-  not call it from code that must keep running after an error.
+  not call it from code that must keep running after an error. A package
+  whose command fails is reported on stderr, the others are still handled,
+  and `exitCode` is then set to 1 (nothing is thrown).
 - `Future<void> activatePackage(String packageName, {bool? dryRun, bool? verbose, PubGlobalPackage? existingPackage})`
   activates one package:
   - a saved config for `packageName` is used first,
@@ -50,6 +54,12 @@ VM only (`dart:io`).
   `dart pub global activate` fail and the `ShellException` from
   `package:process_run` propagate. Catch `ShellException` if you need to
   continue with the next package.
+- `installPackage(name, {PubGlobalTool? tool, dryRun, verbose})` installs
+  with `tool`, else the config tool, else `install` when the config says
+  `hooks`, else the default tool, else `activate`;
+  `migratePackage(name, {tool, dryRun, verbose})` moves an installed
+  package to the other tool and saves it in the config. Both let the
+  `ShellException` through too.
 - Only import on the Dart VM. The library resolves to a stub on the web that
   throws `UnimplementedError`.
 - Do not depend on the printed `updated:` lines from library code; compare

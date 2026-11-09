@@ -1,3 +1,11 @@
+## 1.1.3
+
+* A package that fails to update, install or migrate is reported on stderr and the other packages are still
+  handled; the run ends with `failed: <packages>` and exit code 1 (it stopped at the first failure, unhandled
+  exception)
+* Documentation: README getting started, what an update does, commands, saved config, Dart API and common mistakes;
+  skills up to date (dart install, git path and ref from the lock file, errors)
+
 ## 1.1.2
 
 * Updating or migrating a git package without a saved config keeps its path in the
